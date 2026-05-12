@@ -5,7 +5,7 @@ import { createCategory, updateCategory, deleteCategory } from '@/app/actions/ca
 import { Plus, Pencil, Trash2, Check, X, Loader2, FolderTree } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { cn } from '@/lib/utils'
+
 
 export function CreateCategoryForm() {
   const [isPending, startTransition] = useTransition()
