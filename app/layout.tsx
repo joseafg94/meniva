@@ -7,6 +7,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Meniva - Menú QR Digital",
   description: "Menú digital moderno y fácil de usar para restaurantes",
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({
