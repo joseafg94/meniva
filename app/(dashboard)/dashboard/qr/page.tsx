@@ -123,7 +123,6 @@ export default function QRPage() {
               className="flex items-center justify-center gap-1.5 px-2 text-xs sm:text-sm"
             >
               <a href={menuUrl} target="_blank" rel="noopener noreferrer">
-                <ExternalLink size={16} className="sm:size-[18px]" />
                 Ver menú
               </a>
             </Button>
