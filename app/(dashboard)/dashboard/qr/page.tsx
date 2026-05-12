@@ -70,7 +70,7 @@ export default function QRPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto space-y-8">
+    <div className="max-w-md mx-auto space-y-8 w-full px-1">
       <div>
         <h1 className="text-2xl font-bold text-zinc-900">Mi QR</h1>
         <p className="text-sm text-zinc-500">
@@ -78,19 +78,19 @@ export default function QRPage() {
         </p>
       </div>
 
-      <div className="bg-white border border-zinc-200 rounded-2xl p-8 flex flex-col items-center space-y-6 shadow-sm">
-        <div ref={qrRef} className="p-4 bg-white rounded-xl border border-zinc-100 shadow-inner">
+      <div className="bg-white border border-zinc-200 rounded-2xl p-6 sm:p-8 flex flex-col items-center space-y-6 shadow-sm overflow-hidden">
+        <div ref={qrRef} className="p-3 sm:p-4 bg-white rounded-xl border border-zinc-100 shadow-inner">
           <QRCodeCanvas
             value={menuUrl}
-            size={240}
+            size={200}
             level="H"
             includeMargin={true}
             imageSettings={{
               src: "/favicon.ico",
               x: undefined,
               y: undefined,
-              height: 40,
-              width: 40,
+              height: 32,
+              width: 32,
               excavate: true,
             }}
           />
@@ -98,7 +98,7 @@ export default function QRPage() {
 
         <div className="w-full space-y-4">
           <div className="flex items-center gap-2 p-3 bg-zinc-50 border border-zinc-200 rounded-lg overflow-hidden">
-            <span className="flex-1 text-xs text-zinc-600 truncate font-mono">
+            <span className="flex-1 text-[10px] sm:text-xs text-zinc-600 truncate font-mono">
               {menuUrl}
             </span>
             <button 
@@ -109,21 +109,21 @@ export default function QRPage() {
             </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-2 sm:gap-3">
             <Button 
               onClick={downloadQR}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-2"
+              className="bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-1.5 px-2 text-xs sm:text-sm"
             >
-              <Download size={18} />
+              <Download size={16} className="sm:size-[18px]" />
               Descargar
             </Button>
             <Button 
               variant="outline"
               asChild
-              className="flex items-center justify-center gap-2"
+              className="flex items-center justify-center gap-1.5 px-2 text-xs sm:text-sm"
             >
               <a href={menuUrl} target="_blank" rel="noopener noreferrer">
-                <ExternalLink size={18} />
+                <ExternalLink size={16} className="sm:size-[18px]" />
                 Ver menú
               </a>
             </Button>
@@ -135,7 +135,7 @@ export default function QRPage() {
         <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center shrink-0">
           <Check size={16} className="text-emerald-600" />
         </div>
-        <p className="text-xs text-emerald-800 leading-relaxed">
+        <p className="text-[11px] text-emerald-800 leading-relaxed">
           <strong>Tip:</strong> Imprime este código QR y colócalo en las mesas de tu restaurante para que tus clientes puedan acceder al menú al instante.
         </p>
       </div>
