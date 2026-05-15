@@ -178,3 +178,42 @@ export async function toggleProductAvailability(id: string, isAvailable: boolean
     return { error: 'Error inesperado' }
   }
 }
+export async function toggleProductFeatured(id: string, isFeatured: boolean, badgeType?: string) {
+  try {
+    const { restaurantId, supabase } = await getRestaurantId()
+
+    if (isFeatured) {
+      const { count, error: countError } = await supabase
+        .from('products')
+        .select('id', { count: 'exact', head: true })
+        .eq('restaurant_id', restaurantId)
+        .eq('is_featured', true)
+
+      if (countError) throw countError
+      if (count && count >= 5) {
+        return { error: 'Máximo 5 productos destacados permitidos' }
+      }
+    }
+
+    const { error } = await supabase
+      .from('products')
+      .update({ 
+        is_featured: isFeatured,
+        badge_type: isFeatured ? (badgeType || 'Popular') : null
+      })
+      .eq('id', id)
+      .eq('restaurant_id', restaurantId)
+
+    if (error) {
+      console.error('Error toggling featured:', error)
+      return { error: 'Error al actualizar el producto' }
+    }
+
+    revalidatePath('/dashboard/products')
+    revalidatePath('/dashboard')
+    return { success: true }
+  } catch (err) {
+    console.error(err)
+    return { error: 'Error inesperado' }
+  }
+}

@@ -57,7 +57,7 @@ export default async function MenuPage({ params }: PageProps) {
   // Fetch all available products
   const { data: products } = await supabase
     .from('products')
-    .select('id, name, description, price, image_url, category_id, is_available')
+    .select('id, name, description, price, image_url, category_id, is_available, is_featured, badge_type')
     .eq('restaurant_id', restaurant.id)
     .order('position')
 

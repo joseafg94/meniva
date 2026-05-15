@@ -3,8 +3,8 @@
 import { useState, useTransition } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { deleteProduct, toggleProductAvailability } from '@/app/actions/products'
-import { Pencil, Trash2, Loader2, Package } from 'lucide-react'
+import { deleteProduct, toggleProductAvailability, toggleProductFeatured } from '@/app/actions/products'
+import { Pencil, Trash2, Loader2, Package, Star } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
@@ -20,6 +20,8 @@ interface Product {
   price: number
   image_url: string | null
   is_available: boolean
+  is_featured: boolean
+  badge_type: string | null
   category_id: string | null
   categories: Category | null
 }
@@ -116,32 +118,69 @@ export function ProductCard({ product }: { product: Product }) {
           ${Number(product.price).toFixed(2)}
         </p>
 
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            {isPending
-              ? <Loader2 size={16} className="animate-spin text-zinc-400" />
-              : <Toggle checked={product.is_available} onChange={handleToggle} />
-            }
-            <span className="text-xs text-zinc-500">
-              {product.is_available ? 'Disponible' : 'Agotado'}
-            </span>
+        <div className="flex flex-col gap-3 mt-4 pt-4 border-t border-zinc-100">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Toggle 
+                checked={product.is_featured} 
+                onChange={(val) => {
+                  setError(null)
+                  startTransition(async () => {
+                    const result = await toggleProductFeatured(product.id, val, product.badge_type || 'Popular')
+                    if (result?.error) setError(result.error)
+                  })
+                }} 
+              />
+              <span className="text-xs font-medium text-zinc-700 flex items-center gap-1">
+                <Star size={12} className={cn(product.is_featured ? "fill-amber-400 text-amber-400" : "text-zinc-400")} />
+                Destacado
+              </span>
+            </div>
+
+            {product.is_featured && (
+              <select
+                value={product.badge_type || 'Popular'}
+                onChange={(e) => {
+                  startTransition(async () => {
+                    await toggleProductFeatured(product.id, true, e.target.value)
+                  })
+                }}
+                className="text-[10px] bg-zinc-50 border-zinc-200 rounded px-1 py-0.5 outline-none focus:border-emerald-500"
+              >
+                <option value="Popular">Popular</option>
+                <option value="Nuevo">Nuevo</option>
+                <option value="Recomendado">Recomendado</option>
+              </select>
+            )}
           </div>
 
-          <div className="flex gap-1 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
-            <Link href={`/dashboard/products/${product.id}/edit`}>
-              <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-zinc-900 size-8">
-                <Pencil size={15} />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              {isPending
+                ? <Loader2 size={16} className="animate-spin text-zinc-400" />
+                : <Toggle checked={product.is_available} onChange={handleToggle} />
+              }
+              <span className="text-xs text-zinc-500">
+                {product.is_available ? 'Disponible' : 'Agotado'}
+              </span>
+            </div>
+
+            <div className="flex gap-1 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
+              <Link href={`/dashboard/products/${product.id}/edit`}>
+                <Button variant="ghost" size="icon" className="text-zinc-400 hover:text-zinc-900 size-8">
+                  <Pencil size={15} />
+                </Button>
+              </Link>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={handleDelete}
+                disabled={isPending}
+                className="text-zinc-400 hover:text-red-600 size-8"
+              >
+                {isPending ? <Loader2 size={15} className="animate-spin" /> : <Trash2 size={15} />}
               </Button>
-            </Link>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={handleDelete}
-              disabled={isPending}
-              className="text-zinc-400 hover:text-red-600 size-8"
-            >
-              {isPending ? <Loader2 size={15} className="animate-spin" /> : <Trash2 size={15} />}
-            </Button>
+            </div>
           </div>
         </div>
 
