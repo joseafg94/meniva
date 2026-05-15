@@ -8,7 +8,7 @@ interface Category {
   name: string
 }
 
-export function CategoryNav({ categories, primaryColor = '#059669' }: { categories: Category[]; primaryColor?: string }) {
+export function CategoryNav({ categories }: { categories: Category[] }) {
   const [active, setActive] = useState<string>(categories[0]?.id ?? '')
   const navRef = useRef<HTMLDivElement>(null)
 
@@ -62,7 +62,7 @@ export function CategoryNav({ categories, primaryColor = '#059669' }: { categori
                 ? 'text-white'
                 : 'text-zinc-600 hover:bg-zinc-100'
             )}
-            style={active === cat.id ? { backgroundColor: primaryColor } : undefined}
+            style={active === cat.id ? { backgroundColor: 'var(--color-primary)' } : undefined}
           >
             {cat.name}
           </button>
