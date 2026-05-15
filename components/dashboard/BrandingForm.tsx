@@ -4,6 +4,7 @@ import { useActionState, useState, useRef, useEffect } from 'react'
 import { saveBranding, BrandingState } from '@/app/actions/branding'
 import Image from 'next/image'
 import { Upload, Check, Palette, ImageIcon } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 const PRIMARY_OPTIONS = [
   { key: 'emerald', label: 'Esmeralda', hex: '#059669', tailwind: 'bg-emerald-600' },
