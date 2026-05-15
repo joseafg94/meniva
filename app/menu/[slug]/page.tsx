@@ -80,11 +80,7 @@ export default async function MenuPage({ params }: PageProps) {
   return (
     <div 
       className="min-h-screen"
-      style={{ 
-        '--color-primary': primaryColor,
-        '--color-bg': secondaryColor,
-        backgroundColor: secondaryColor,
-      } as React.CSSProperties}
+      style={{ backgroundColor: secondaryColor }}
     >
       {/* Promo Banner */}
       {isBannerVisible && (
@@ -125,7 +121,7 @@ export default async function MenuPage({ params }: PageProps) {
 
       {/* Category nav */}
       {(categories?.length ?? 0) > 0 && (
-        <CategoryNav categories={categories ?? []} />
+        <CategoryNav categories={categories ?? []} primaryColor={primaryColor} />
       )}
 
       {/* Menu sections */}
@@ -137,7 +133,7 @@ export default async function MenuPage({ params }: PageProps) {
             </h2>
             <div className="space-y-3">
               {cat.products.map((product) => (
-                <MenuProductCard key={product.id} product={product} />
+                <MenuProductCard key={product.id} product={product} primaryColor={primaryColor} />
               ))}
             </div>
           </section>
@@ -151,7 +147,7 @@ export default async function MenuPage({ params }: PageProps) {
             </h2>
             <div className="space-y-3">
               {uncategorized.map((product) => (
-                <MenuProductCard key={product.id} product={product} />
+                <MenuProductCard key={product.id} product={product} primaryColor={primaryColor} />
               ))}
             </div>
           </section>
