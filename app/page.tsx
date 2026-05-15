@@ -34,7 +34,7 @@ export default function Home() {
           <Link href="/register" className={buttonVariants({ variant: "default", className: "bg-emerald-600 hover:bg-emerald-700 text-white h-14 px-10 text-lg font-bold rounded-2xl shadow-xl shadow-emerald-600/20" })}>
             Registrar mi restaurante
           </Link>
-          <Link href="/login" className={buttonVariants({ variant: "outline", className: "h-14 px-10 text-lg font-semibold rounded-2xl border-zinc-200" })}>
+          <Link href="/login" className={buttonVariants({ variant: "outline", className: "h-14 px-10 text-lg font-semibold rounded-2xl border-zinc-300 text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition-all shadow-sm" })}>
             Entrar al Panel
           </Link>
         </div>
