@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { Package, FolderTree, QrCode, Megaphone, Palette } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -19,7 +20,10 @@ export function Sidebar() {
   return (
     <aside className="hidden md:flex flex-col w-64 bg-white border-r border-zinc-200 h-screen sticky top-0">
       <div className="p-6">
-        <h1 className="text-xl font-bold text-emerald-600">Meniva</h1>
+        <Link href="/dashboard" className="flex items-center gap-3">
+          <Image src="/logo.svg" alt="Meniva" width={75} height={75} />
+          <span className="text-xl font-bold text-zinc-900 tracking-tight">Meniva</span>
+        </Link>
       </div>
       <nav className="flex-1 px-4 space-y-1">
         {navItems.map((item) => {
