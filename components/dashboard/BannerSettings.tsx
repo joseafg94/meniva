@@ -8,11 +8,21 @@ import { Label } from '@/components/ui/label'
 import { Megaphone, Check } from 'lucide-react'
 
 const PRESET_COLORS = [
-  { name: 'Emerald', value: '#059669', bg: 'bg-emerald-600' },
-  { name: 'Rose', value: '#e11d48', bg: 'bg-rose-600' },
-  { name: 'Blue', value: '#2563eb', bg: 'bg-blue-600' },
-  { name: 'Amber', value: '#d97706', bg: 'bg-amber-600' },
-  { name: 'Zinc', value: '#52525b', bg: 'bg-zinc-600' },
+    { key: 'cyan',       label: 'Cian',          hex: '#06b6d4' },
+  { key: 'lime',       label: 'Lima',          hex: '#65a30d' },
+  { key: 'fuchsia',    label: 'Fucsia',        hex: '#c026d3' },
+  { key: 'yellow',     label: 'Amarillo',      hex: '#eab308' },
+  { key: 'sky',        label: 'Celeste',       hex: '#0ea5e9' },
+  { key: 'slate',      label: 'Slate',         hex: '#475569' },
+  { key: 'brown',      label: 'Marrón',        hex: '#92400e' },
+  { key: 'mint',       label: 'Menta',         hex: '#10b981' },
+  { key: 'magenta',    label: 'Magenta',       hex: '#d946ef' },
+  { key: 'navy',       label: 'Azul Marino',   hex: '#1e3a8a' },
+  { key: 'gold',       label: 'Oro',           hex: '#ca8a04' },
+  { key: 'coral',      label: 'Coral',         hex: '#f97316' },
+  { key: 'charcoal',   label: 'Carbón',        hex: '#1f2937' },
+  { key: 'turquoise',  label: 'Turquesa',      hex: '#14b8a6' },
+  { key: 'crimson',    label: 'Carmesí',       hex: '#be123c' },
 ]
 
 interface BannerSettingsProps {
