@@ -78,8 +78,9 @@ export default function LoginPage() {
       <div className="w-full lg:w-1/2 flex flex-col items-center justify-center p-8 md:p-12 lg:p-16">
         <div className="w-full max-w-sm">
           {/* Logo móvil */}
-          <div className="lg:hidden flex justify-center mb-8">
-            <Image src="/logo.svg" alt="Meniva Logo" width={80} height={80} />
+          <div className="lg:hidden flex flex-col items-center gap-3 mb-8 text-center">
+            <Image src="/logo.svg" alt="Meniva" width={64} height={64} />
+            <h1 className="text-2xl font-bold text-zinc-900">Meniva</h1>
           </div>
 
           <div className="mb-10 text-center lg:text-left">

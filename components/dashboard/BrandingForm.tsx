@@ -140,13 +140,13 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
           </h2>
           <div className="flex items-center gap-4">
             <div
-              className="w-20 h-20 rounded-xl border-2 border-dashed border-zinc-200 flex items-center justify-center overflow-hidden bg-zinc-50 flex-shrink-0 cursor-pointer hover:border-zinc-300 transition-colors"
+              className="w-24 h-24 rounded-2xl border-2 border-dashed border-zinc-200 flex items-center justify-center overflow-hidden bg-zinc-50 flex-shrink-0 cursor-pointer hover:border-zinc-300 transition-colors"
               onClick={() => logoInputRef.current?.click()}
             >
               {logoPreview ? (
-                <Image src={logoPreview} alt="Logo" width={80} height={80} className="object-cover w-full h-full" />
+                <Image src={logoPreview} alt="Logo" width={96} height={96} className="object-cover w-full h-full" />
               ) : (
-                <Upload size={20} className="text-zinc-300" aria-hidden="true" />
+                <Upload size={24} className="text-zinc-300" aria-hidden="true" />
               )}
             </div>
             <div>
