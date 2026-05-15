@@ -125,11 +125,8 @@ export function BannerSettings({ initialData }: BannerSettingsProps) {
                   key={color.value}
                   type="button"
                   onClick={() => setSelectedColor(color.value)}
-                  className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-white transition-transform hover:scale-110 ring-2 ring-offset-2"
-                  style={{
-                    backgroundColor: color.value,
-                    ringColor: selectedColor === color.value ? color.value : 'transparent'
-                  }}
+                  className={`w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-white transition-transform hover:scale-110 ${selectedColor === color.value ? 'ring-2 ring-offset-2 ring-zinc-400' : ''}`}
+                  style={{ backgroundColor: color.value }}
                 >
                   {selectedColor === color.value && <Check size={14} />}
                 </button>
