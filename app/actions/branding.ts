@@ -14,6 +14,11 @@ const PRIMARY_COLORS: Record<string, string> = {
   blue: '#2563eb',
   amber: '#d97706',
   violet: '#7c3aed',
+  orange: '#ea580c',
+  teal: '#0d9488',
+  pink: '#db2777',
+  indigo: '#4f46e5',
+  red: '#dc2626',
 }
 
 const SECONDARY_COLORS: Record<string, string> = {
@@ -67,6 +72,7 @@ export async function saveBranding(
   const primaryKey = formData.get('primary_color') as string
   const secondaryKey = formData.get('secondary_color') as string
   const menuFont = formData.get('menu_font') as string
+  const description = formData.get('description') as string
   const logoFile = formData.get('logo') as File | null
   const coverFile = formData.get('cover') as File | null
 
@@ -80,6 +86,9 @@ export async function saveBranding(
   }
   if (menuFont) {
     updates.menu_font = menuFont
+  }
+  if (typeof description === 'string') {
+    updates.description = description.slice(0, 120)
   }
 
   try {

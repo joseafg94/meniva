@@ -7,11 +7,16 @@ import { Upload, Check, Palette, ImageIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const PRIMARY_OPTIONS = [
-  { key: 'emerald', label: 'Esmeralda', hex: '#059669', tailwind: 'bg-emerald-600' },
-  { key: 'rose',    label: 'Rosa',       hex: '#e11d48', tailwind: 'bg-rose-600' },
-  { key: 'blue',    label: 'Azul',       hex: '#2563eb', tailwind: 'bg-blue-600' },
-  { key: 'amber',   label: 'Ámbar',      hex: '#d97706', tailwind: 'bg-amber-600' },
-  { key: 'violet',  label: 'Violeta',    hex: '#7c3aed', tailwind: 'bg-violet-600' },
+  { key: 'emerald', label: 'Esmeralda', hex: '#059669' },
+  { key: 'rose',    label: 'Rosa',       hex: '#e11d48' },
+  { key: 'blue',    label: 'Azul',       hex: '#2563eb' },
+  { key: 'amber',   label: 'Ámbar',      hex: '#d97706' },
+  { key: 'violet',  label: 'Violeta',    hex: '#7c3aed' },
+  { key: 'orange',  label: 'Naranja',    hex: '#ea580c' },
+  { key: 'teal',    label: 'Teal',       hex: '#0d9488' },
+  { key: 'pink',    label: 'Rosa Int.',  hex: '#db2777' },
+  { key: 'indigo',  label: 'Indigo',     hex: '#4f46e5' },
+  { key: 'red',     label: 'Rojo',       hex: '#dc2626' },
 ]
 
 const SECONDARY_OPTIONS = [
@@ -28,6 +33,9 @@ const FONT_OPTIONS = [
   { key: 'poppins', label: 'Poppins', family: 'Poppins', desc: 'Amigable y redondeada' },
   { key: 'lato', label: 'Lato', family: 'Lato', desc: 'Clásica y profesional' },
   { key: 'merriweather', label: 'Merriweather', family: 'Merriweather', desc: 'Formal y legible' },
+  { key: 'montserrat', label: 'Montserrat', family: 'Montserrat', desc: 'Versátil y moderna' },
+  { key: 'raleway', label: 'Raleway', family: 'Raleway', desc: 'Sofisticada y elegante' },
+  { key: 'nunito', label: 'Nunito', family: 'Nunito', desc: 'Redondeada y fresca' },
 ]
 
 interface BrandingFormProps {
@@ -38,6 +46,7 @@ interface BrandingFormProps {
     secondary_color: string | null
     menu_font: string | null
     name: string
+    description: string | null
   }
 }
 
@@ -56,6 +65,7 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
     colorKeyFromHex(initialData.secondary_color, SECONDARY_OPTIONS)
   )
   const [fontKey, setFontKey] = useState(initialData.menu_font ?? 'inter')
+  const [description, setDescription] = useState(initialData.description ?? '')
   const [logoPreview, setLogoPreview] = useState<string | null>(initialData.logo_url)
   const [coverPreview, setCoverPreview] = useState<string | null>(initialData.cover_url)
   const [logoFile, setLogoFile] = useState<File | null>(null)
@@ -87,8 +97,11 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
     setPreview(url)
   }
 
+  const googleFontsUrl = `https://fonts.googleapis.com/css2?family=${FONT_OPTIONS.map(f => f.family.replace(' ', '+')).join('&family=')}:wght@400;500;600;700&display=swap`
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <link rel="stylesheet" href={googleFontsUrl} />
       {/* Form column */}
       <form action={formAction} className="space-y-6">
         {/* Hidden color inputs */}
@@ -147,6 +160,40 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
           </div>
         </div>
 
+        {/* Restaurant name and description */}
+        <div className="bg-white border border-zinc-200 rounded-xl p-4 md:p-6 space-y-4">
+          <div>
+            <label className="text-sm font-semibold text-zinc-900 mb-2 block">
+              Nombre del restaurante
+            </label>
+            <input
+              type="text"
+              readOnly
+              value={initialData.name}
+              className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm text-zinc-500 cursor-not-allowed"
+            />
+          </div>
+          <div>
+            <label htmlFor="description" className="text-sm font-semibold text-zinc-900 mb-2 block">
+              Descripción del restaurante
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Ej: Cocina artesanal, especialidad en pastas..."
+              maxLength={120}
+              className="w-full border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all min-h-[80px] resize-none"
+            />
+            <div className="flex justify-end mt-1">
+              <span className={cn("text-[10px]", description.length >= 110 ? "text-red-500" : "text-zinc-400")}>
+                {description.length}/120
+              </span>
+            </div>
+          </div>
+        </div>
+
         {/* Cover upload */}
         <div className="bg-white border border-zinc-200 rounded-xl p-4 md:p-6">
           <h2 className="text-sm font-semibold text-zinc-900 mb-4 flex items-center gap-2">
@@ -193,7 +240,13 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
                 onClick={() => setPrimaryKey(opt.key)}
                 className="flex flex-col items-center gap-1.5 group"
               >
-                <div className={`w-10 h-10 rounded-full ${opt.tailwind} flex items-center justify-center ring-2 ring-offset-2 transition-all ${primaryKey === opt.key ? 'ring-zinc-900' : 'ring-transparent'}`}>
+                <div 
+                  className="w-10 h-10 rounded-full flex items-center justify-center ring-2 ring-offset-2 transition-all"
+                  style={{ 
+                    backgroundColor: opt.hex,
+                    boxShadow: primaryKey === opt.key ? `0 0 0 2px white, 0 0 0 4px ${opt.hex}` : 'none'
+                  }}
+                >
                   {primaryKey === opt.key && <Check size={14} className="text-white" aria-hidden="true" />}
                 </div>
                 <span className="text-[10px] text-zinc-500">{opt.label}</span>
@@ -224,7 +277,7 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
                 style={{ fontFamily: opt.family }}
               >
                 <div>
-                  <p className="text-sm font-semibold text-zinc-900">{opt.label}</p>
+                  <p className="text-base font-medium text-zinc-900">{opt.label}</p>
                   <p className="text-[10px] text-zinc-500">{opt.desc}</p>
                 </div>
                 {fontKey === opt.key && <Check size={16} className="text-zinc-900" />}
@@ -275,7 +328,7 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
               )}
               <div>
                 <p className="text-xs font-bold text-zinc-900">{initialData.name}</p>
-                <p className="text-[10px] text-zinc-400">Descripción del restaurante</p>
+                <p className="text-[10px] text-zinc-400 line-clamp-1">{description || 'Descripción del restaurante'}</p>
               </div>
             </div>
             {/* Category tabs */}

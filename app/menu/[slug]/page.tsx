@@ -83,6 +83,9 @@ export default async function MenuPage({ params }: PageProps) {
     poppins: 'Poppins',
     lato: 'Lato',
     merriweather: 'Merriweather',
+    montserrat: 'Montserrat',
+    raleway: 'Raleway',
+    nunito: 'Nunito',
   }
   const fontFamily = fontMap[restaurant.menu_font ?? 'inter']
 
@@ -112,17 +115,17 @@ export default async function MenuPage({ params }: PageProps) {
             style={{ backgroundImage: `url(${restaurant.cover_url})` }}
           />
         )}
-        <div className="px-4 py-6 flex items-center gap-4">
+        <div className="px-5 py-6 flex items-center gap-4">
           {restaurant.logo_url && (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={restaurant.logo_url}
               alt={restaurant.name}
-              className="w-16 h-16 rounded-2xl object-cover border border-zinc-100 shrink-0 shadow-sm"
+              className="w-20 h-20 rounded-2xl object-cover border border-zinc-100 shrink-0 shadow-sm"
             />
           )}
           <div>
-            <h1 className="text-2xl font-bold text-zinc-900">{restaurant.name}</h1>
+            <h1 className="text-3xl font-bold text-zinc-900">{restaurant.name}</h1>
             {restaurant.description && (
               <p className="text-sm text-zinc-400 mt-0.5 leading-relaxed">
                 {restaurant.description}
