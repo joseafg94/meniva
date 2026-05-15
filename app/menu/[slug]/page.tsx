@@ -79,11 +79,11 @@ export default async function MenuPage({ params }: PageProps) {
 
   return (
     <div 
-      className="min-h-screen" 
+      className="min-h-screen"
       style={{ 
-        backgroundColor: 'var(--color-bg)',
         '--color-primary': primaryColor,
         '--color-bg': secondaryColor,
+        backgroundColor: secondaryColor,
       } as React.CSSProperties}
     >
       {/* Promo Banner */}
