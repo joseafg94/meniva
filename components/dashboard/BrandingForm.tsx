@@ -7,16 +7,21 @@ import { Upload, Check, Palette, ImageIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const PRIMARY_OPTIONS = [
-  { key: 'emerald', label: 'Esmeralda', hex: '#059669' },
-  { key: 'rose',    label: 'Rosa',       hex: '#e11d48' },
-  { key: 'blue',    label: 'Azul',       hex: '#2563eb' },
-  { key: 'amber',   label: 'Ámbar',      hex: '#d97706' },
-  { key: 'violet',  label: 'Violeta',    hex: '#7c3aed' },
-  { key: 'orange',  label: 'Naranja',    hex: '#ea580c' },
-  { key: 'teal',    label: 'Teal',       hex: '#0d9488' },
-  { key: 'pink',    label: 'Rosa Int.',  hex: '#db2777' },
-  { key: 'indigo',  label: 'Indigo',     hex: '#4f46e5' },
-  { key: 'red',     label: 'Rojo',       hex: '#dc2626' },
+  { key: 'cyan',       label: 'Cian',          hex: '#06b6d4' },
+  { key: 'lime',       label: 'Lima',          hex: '#65a30d' },
+  { key: 'fuchsia',    label: 'Fucsia',        hex: '#c026d3' },
+  { key: 'yellow',     label: 'Amarillo',      hex: '#eab308' },
+  { key: 'sky',        label: 'Celeste',       hex: '#0ea5e9' },
+  { key: 'slate',      label: 'Slate',         hex: '#475569' },
+  { key: 'brown',      label: 'Marrón',        hex: '#92400e' },
+  { key: 'mint',       label: 'Menta',         hex: '#10b981' },
+  { key: 'magenta',    label: 'Magenta',       hex: '#d946ef' },
+  { key: 'navy',       label: 'Azul Marino',   hex: '#1e3a8a' },
+  { key: 'gold',       label: 'Oro',           hex: '#ca8a04' },
+  { key: 'coral',      label: 'Coral',         hex: '#f97316' },
+  { key: 'charcoal',   label: 'Carbón',        hex: '#1f2937' },
+  { key: 'turquoise',  label: 'Turquesa',      hex: '#14b8a6' },
+  { key: 'crimson',    label: 'Carmesí',       hex: '#be123c' },
 ]
 
 const SECONDARY_OPTIONS = [
