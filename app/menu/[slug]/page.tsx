@@ -2,7 +2,11 @@ import { createClient } from '@/lib/supabase/server'
 import { notFound } from 'next/navigation'
 import { CategoryNav } from '@/components/menu/CategoryNav'
 import { MenuProductCard } from '@/components/menu/MenuProductCard'
+import { PromoBanner } from '@/components/menu/PromoBanner'
 import { Metadata } from 'next'
+
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -35,7 +39,7 @@ export default async function MenuPage({ params }: PageProps) {
   // Fetch restaurant
   const { data: restaurant } = await supabase
     .from('restaurants')
-    .select('id, name, description, logo_url, cover_url')
+    .select('id, name, description, logo_url, cover_url, banner_active, banner_text, banner_color, banner_emoji, banner_expires_at')
     .eq('slug', slug)
     .single()
 
@@ -53,9 +57,8 @@ export default async function MenuPage({ params }: PageProps) {
   // Fetch all available products
   const { data: products } = await supabase
     .from('products')
-    .select('id, name, description, price, image_url, category_id')
+    .select('id, name, description, price, image_url, category_id, is_available')
     .eq('restaurant_id', restaurant.id)
-    .eq('is_available', true)
     .order('position')
 
   // Group products by category
@@ -67,8 +70,21 @@ export default async function MenuPage({ params }: PageProps) {
   // Products without category
   const uncategorized = (products ?? []).filter((p) => !p.category_id)
 
+  // Check if banner should be visible
+  const isBannerVisible = restaurant.banner_active && 
+    (!restaurant.banner_expires_at || new Date(restaurant.banner_expires_at) >= new Date(new Date().setHours(0,0,0,0)))
+
   return (
     <div className="min-h-screen bg-zinc-50">
+      {/* Promo Banner */}
+      {isBannerVisible && (
+        <PromoBanner 
+          banner_text={restaurant.banner_text}
+          banner_color={restaurant.banner_color}
+          banner_emoji={restaurant.banner_emoji}
+        />
+      )}
+
       {/* Hero header */}
       <div className="bg-white border-b border-zinc-100">
         {restaurant.cover_url && (
