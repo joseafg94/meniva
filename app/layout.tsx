@@ -8,6 +8,10 @@ export const metadata: Metadata = {
   title: "Meniva - Menú QR Digital",
   description: "Menú digital moderno y fácil de usar para restaurantes",
   manifest: '/manifest.json',
+  icons: {
+    icon: '/logo.svg',
+    apple: '/logo.svg',
+  }
 };
 
 export default function RootLayout({
