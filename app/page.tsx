@@ -7,7 +7,7 @@ export default function Home() {
     <div className="flex flex-col min-h-screen bg-white">
       <nav className="border-b border-zinc-100 px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex flex-col items-center text-center -space-y-1">
-          <Image src="/logo.svg" alt="Meniva" width={80} height={80} />
+          <Image src="/logo.svg" alt="Meniva" width={85} height={85} />
           <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">Meniva</h1>
         </div>
       </nav>
