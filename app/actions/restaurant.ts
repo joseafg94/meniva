@@ -25,16 +25,16 @@ export async function updateBannerSettings(formData: FormData) {
   const banner_text = formData.get('banner_text') as string
   const banner_color = formData.get('banner_color') as string
   const banner_emoji = formData.get('banner_emoji') as string
-  const banner_expires_at = formData.get('banner_expires_at') as string || null
+  const banner_expires_at = (formData.get('banner_expires_at') as string) || null
 
   const { error } = await supabase
     .from('restaurants')
     .update({
-      banner_active,
+      banner_active: Boolean(banner_active),
       banner_text,
       banner_color,
       banner_emoji,
-      banner_expires_at: banner_expires_at || null,
+      banner_expires_at: banner_expires_at,
     })
     .eq('id', restaurant.id)
 
@@ -44,6 +44,7 @@ export async function updateBannerSettings(formData: FormData) {
   }
 
   revalidatePath('/dashboard')
+  revalidatePath('/dashboard/banner')
   revalidatePath(`/menu/${restaurant.slug}`)
 
   return { success: true, message: 'Banner actualizado correctamente' }

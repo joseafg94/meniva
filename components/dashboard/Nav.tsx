@@ -2,12 +2,13 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Package, FolderTree, QrCode } from 'lucide-react'
+import { Package, FolderTree, QrCode, Megaphone } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navItems = [
   { name: 'Productos', href: '/dashboard/products', icon: Package },
   { name: 'Categorías', href: '/dashboard/categories', icon: FolderTree },
+  { name: 'Banner', href: '/dashboard/banner', icon: Megaphone },
   { name: 'Mi QR', href: '/dashboard/qr', icon: QrCode },
 ]
 

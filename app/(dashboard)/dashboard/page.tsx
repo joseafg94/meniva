@@ -3,7 +3,6 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { Package, FolderTree, QrCode } from 'lucide-react'
 import { Metadata } from 'next'
-import { BannerSettings } from '@/components/dashboard/BannerSettings'
 
 export const metadata: Metadata = {
   title: 'Dashboard - Meniva',
@@ -74,16 +73,6 @@ export default async function DashboardPage() {
           </Link>
         ))}
       </div>
-
-      <BannerSettings 
-        initialData={{
-          banner_active: restaurant?.banner_active ?? false,
-          banner_text: restaurant?.banner_text ?? '',
-          banner_color: restaurant?.banner_color ?? '#059669',
-          banner_emoji: restaurant?.banner_emoji ?? '',
-          banner_expires_at: restaurant?.banner_expires_at ?? null,
-        }} 
-      />
     </div>
   )
 }
