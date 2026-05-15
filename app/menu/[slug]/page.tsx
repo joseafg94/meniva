@@ -39,7 +39,7 @@ export default async function MenuPage({ params }: PageProps) {
   // Fetch restaurant
   const { data: restaurant } = await supabase
     .from('restaurants')
-    .select('id, name, description, logo_url, cover_url, banner_active, banner_text, banner_color, banner_emoji, banner_expires_at')
+    .select('id, name, description, logo_url, cover_url, banner_active, banner_text, banner_color, banner_emoji, banner_expires_at, primary_color, secondary_color')
     .eq('slug', slug)
     .single()
 
@@ -74,8 +74,11 @@ export default async function MenuPage({ params }: PageProps) {
   const isBannerVisible = restaurant.banner_active && 
     (!restaurant.banner_expires_at || new Date(restaurant.banner_expires_at) >= new Date(new Date().setHours(0,0,0,0)))
 
+  const primaryColor = restaurant.primary_color ?? '#059669'
+  const secondaryColor = restaurant.secondary_color ?? '#fafafa'
+
   return (
-    <div className="min-h-screen bg-zinc-50">
+    <div className="min-h-screen" style={{ backgroundColor: secondaryColor }}>
       {/* Promo Banner */}
       {isBannerVisible && (
         <PromoBanner 
@@ -115,7 +118,7 @@ export default async function MenuPage({ params }: PageProps) {
 
       {/* Category nav */}
       {(categories?.length ?? 0) > 0 && (
-        <CategoryNav categories={categories ?? []} />
+        <CategoryNav categories={categories ?? []} primaryColor={primaryColor} />
       )}
 
       {/* Menu sections */}
@@ -127,7 +130,7 @@ export default async function MenuPage({ params }: PageProps) {
             </h2>
             <div className="space-y-3">
               {cat.products.map((product) => (
-                <MenuProductCard key={product.id} product={product} />
+                <MenuProductCard key={product.id} product={product} primaryColor={primaryColor} />
               ))}
             </div>
           </section>
@@ -141,7 +144,7 @@ export default async function MenuPage({ params }: PageProps) {
             </h2>
             <div className="space-y-3">
               {uncategorized.map((product) => (
-                <MenuProductCard key={product.id} product={product} />
+                <MenuProductCard key={product.id} product={product} primaryColor={primaryColor} />
               ))}
             </div>
           </section>
