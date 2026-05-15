@@ -10,14 +10,7 @@ export default function Home() {
           <Image src="/logo.svg" alt="Meniva Logo" width={85} height={85} />
           <span className="text-xl font-bold text-zinc-900 tracking-tight">Meniva</span>
         </div>
-        {/*<div className="flex gap-4">
-          <Link href="/login" className="text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors">
-            Iniciar sesión
-          </Link>
-          <Link href="/register" className={buttonVariants({ variant: "default", className: "bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-6" })}>
-            Comenzar gratis
-          </Link>
-      </nav>*/}
+      </nav>
 
       <main className="flex-1 flex flex-col items-center justify-center p-6 text-center max-w-4xl mx-auto">
         <div className="inline-flex items-center gap-2 bg-emerald-50 text-emerald-700 px-4 py-2 rounded-full text-sm font-medium mb-8 animate-in fade-in slide-in-from-bottom-2">
