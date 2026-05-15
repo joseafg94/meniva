@@ -226,7 +226,7 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
           {coverFile && (
             <p className="text-xs text-zinc-400 mt-2">{coverFile.name}</p>
           )}
-          <p className="text-xs text-zinc-400 mt-1">PNG, JPG — proporción 16:9 recomendada</p>
+          <p className="text-xs text-zinc-400 mt-1">PNG, JPG — proporción 1546 x 423 píxeles recomendada</p>
         </div>
 
         {/* Primary color */}
