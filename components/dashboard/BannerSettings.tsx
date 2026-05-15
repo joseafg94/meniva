@@ -8,21 +8,31 @@ import { Label } from '@/components/ui/label'
 import { Megaphone, Check } from 'lucide-react'
 
 const PRESET_COLORS = [
-    { key: 'cyan',       label: 'Cian',          hex: '#06b6d4' },
-  { key: 'lime',       label: 'Lima',          hex: '#65a30d' },
-  { key: 'fuchsia',    label: 'Fucsia',        hex: '#c026d3' },
-  { key: 'yellow',     label: 'Amarillo',      hex: '#eab308' },
-  { key: 'sky',        label: 'Celeste',       hex: '#0ea5e9' },
-  { key: 'slate',      label: 'Slate',         hex: '#475569' },
-  { key: 'brown',      label: 'Marrón',        hex: '#92400e' },
-  { key: 'mint',       label: 'Menta',         hex: '#10b981' },
-  { key: 'magenta',    label: 'Magenta',       hex: '#d946ef' },
-  { key: 'navy',       label: 'Azul Marino',   hex: '#1e3a8a' },
-  { key: 'gold',       label: 'Oro',           hex: '#ca8a04' },
-  { key: 'coral',      label: 'Coral',         hex: '#f97316' },
-  { key: 'charcoal',   label: 'Carbón',        hex: '#1f2937' },
-  { key: 'turquoise',  label: 'Turquesa',      hex: '#14b8a6' },
-  { key: 'crimson',    label: 'Carmesí',       hex: '#be123c' },
+  { name: 'Emerald', value: '#059669' },
+  { name: 'Rose', value: '#e11d48' },
+  { name: 'Blue', value: '#2563eb' },
+  { name: 'Amber', value: '#d97706' },
+  { name: 'Violet', value: '#7c3aed' },
+  { name: 'Orange', value: '#ea580c' },
+  { name: 'Teal', value: '#0d9488' },
+  { name: 'Pink', value: '#db2777' },
+  { name: 'Indigo', value: '#4f46e5' },
+  { name: 'Red', value: '#dc2626' },
+  { name: 'Cian', value: '#06b6d4' },
+  { name: 'Lima', value: '#65a30d' },
+  { name: 'Fucsia', value: '#c026d3' },
+  { name: 'Amarillo', value: '#eab308' },
+  { name: 'Celeste', value: '#0ea5e9' },
+  { name: 'Slate', value: '#475569' },
+  { name: 'Marrón', value: '#92400e' },
+  { name: 'Menta', value: '#10b981' },
+  { name: 'Magenta', value: '#d946ef' },
+  { name: 'Azul Marino', value: '#1e3a8a' },
+  { name: 'Oro', value: '#ca8a04' },
+  { name: 'Coral', value: '#f97316' },
+  { name: 'Carbón', value: '#1f2937' },
+  { name: 'Turquesa', value: '#14b8a6' },
+  { name: 'Carmesí', value: '#be123c' },
 ]
 
 interface BannerSettingsProps {
@@ -109,15 +119,19 @@ export function BannerSettings({ initialData }: BannerSettingsProps) {
 
           <div className="space-y-2">
             <Label>Color de fondo</Label>
-            <div className="flex gap-3">
+            <div className="flex gap-3 overflow-x-auto pb-2 scroll-smooth" style={{ maxWidth: '220px' }}>
               {PRESET_COLORS.map((color) => (
                 <button
                   key={color.value}
                   type="button"
                   onClick={() => setSelectedColor(color.value)}
-                  className={`w-8 h-8 rounded-full ${color.bg} flex items-center justify-center text-white transition-transform hover:scale-110`}
+                  className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center text-white transition-transform hover:scale-110 ring-2 ring-offset-2"
+                  style={{
+                    backgroundColor: color.value,
+                    ringColor: selectedColor === color.value ? color.value : 'transparent'
+                  }}
                 >
-                  {selectedColor === color.value && <Check size={16} />}
+                  {selectedColor === color.value && <Check size={14} />}
                 </button>
               ))}
             </div>
