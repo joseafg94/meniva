@@ -14,7 +14,7 @@ export default async function BrandingPage() {
 
   const { data: restaurant } = await supabase
     .from('restaurants')
-    .select('name, logo_url, cover_url, primary_color, secondary_color')
+    .select('name, logo_url, cover_url, primary_color, secondary_color, menu_font')
     .eq('user_id', user.id)
     .single()
 

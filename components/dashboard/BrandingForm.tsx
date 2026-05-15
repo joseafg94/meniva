@@ -21,12 +21,21 @@ const SECONDARY_OPTIONS = [
   { key: 'neutral-50',  label: 'Neutral',    hex: '#fafafa',  preview: 'bg-neutral-50 border-zinc-200' },
 ]
 
+const FONT_OPTIONS = [
+  { key: 'inter', label: 'Inter', family: 'Inter', desc: 'Moderna y limpia' },
+  { key: 'playfair', label: 'Playfair', family: 'Playfair Display', desc: 'Elegante y serif' },
+  { key: 'poppins', label: 'Poppins', family: 'Poppins', desc: 'Amigable y redondeada' },
+  { key: 'lato', label: 'Lato', family: 'Lato', desc: 'Clásica y profesional' },
+  { key: 'merriweather', label: 'Merriweather', family: 'Merriweather', desc: 'Formal y legible' },
+]
+
 interface BrandingFormProps {
   initialData: {
     logo_url: string | null
     cover_url: string | null
     primary_color: string | null
     secondary_color: string | null
+    menu_font: string | null
     name: string
   }
 }
@@ -45,6 +54,7 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
   const [secondaryKey, setSecondaryKey] = useState(
     colorKeyFromHex(initialData.secondary_color, SECONDARY_OPTIONS)
   )
+  const [fontKey, setFontKey] = useState(initialData.menu_font ?? 'inter')
   const [logoPreview, setLogoPreview] = useState<string | null>(initialData.logo_url)
   const [coverPreview, setCoverPreview] = useState<string | null>(initialData.cover_url)
   const [logoFile, setLogoFile] = useState<File | null>(null)
@@ -55,6 +65,7 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
 
   const primaryColor = PRIMARY_OPTIONS.find(o => o.key === primaryKey)!
   const secondaryColor = SECONDARY_OPTIONS.find(o => o.key === secondaryKey)!
+  const fontOption = FONT_OPTIONS.find(o => o.key === fontKey) || FONT_OPTIONS[0]
 
   useEffect(() => {
     if (state.success) {
@@ -82,6 +93,7 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
         {/* Hidden color inputs */}
         <input type="hidden" name="primary_color" value={primaryKey} />
         <input type="hidden" name="secondary_color" value={secondaryKey} />
+        <input type="hidden" name="menu_font" value={fontKey} />
 
         {/* Hidden file inputs */}
         <input
@@ -189,26 +201,32 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
           </div>
         </div>
 
-        {/* Secondary color */}
+        {/* Menu Font */}
         <div className="bg-white border border-zinc-200 rounded-xl p-4 md:p-6">
           <h2 className="text-sm font-semibold text-zinc-900 mb-1 flex items-center gap-2">
             <Palette size={16} aria-hidden="true" />
-            Fondo del menú
+            Fuente del menú
           </h2>
-          <p className="text-xs text-zinc-400 mb-4">Color de fondo de la página del menú</p>
-          <div className="flex gap-3 flex-wrap">
-            {SECONDARY_OPTIONS.map((opt) => (
+          <p className="text-xs text-zinc-400 mb-4">Estilo tipográfico de tu menú público</p>
+          <div className="grid grid-cols-1 gap-2">
+            {FONT_OPTIONS.map((opt) => (
               <button
                 key={opt.key}
                 type="button"
-                id={`secondary-${opt.key}`}
-                onClick={() => setSecondaryKey(opt.key)}
-                className="flex flex-col items-center gap-1.5 group"
+                onClick={() => setFontKey(opt.key)}
+                className={cn(
+                  "flex items-center justify-between p-3 rounded-lg border transition-all text-left",
+                  fontKey === opt.key 
+                    ? "border-zinc-900 bg-zinc-50 ring-1 ring-zinc-900" 
+                    : "border-zinc-200 hover:border-zinc-300"
+                )}
+                style={{ fontFamily: opt.family }}
               >
-                <div className={`w-10 h-10 rounded-full border-2 ${opt.preview} flex items-center justify-center ring-2 ring-offset-2 transition-all ${secondaryKey === opt.key ? 'ring-zinc-900' : 'ring-transparent'}`}>
-                  {secondaryKey === opt.key && <Check size={14} className="text-zinc-600" aria-hidden="true" />}
+                <div>
+                  <p className="text-sm font-semibold text-zinc-900">{opt.label}</p>
+                  <p className="text-[10px] text-zinc-500">{opt.desc}</p>
                 </div>
-                <span className="text-[10px] text-zinc-500">{opt.label}</span>
+                {fontKey === opt.key && <Check size={16} className="text-zinc-900" />}
               </button>
             ))}
           </div>
@@ -238,8 +256,8 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
         <div className="bg-white border border-zinc-200 rounded-xl p-4 md:p-6">
           <h2 className="text-sm font-semibold text-zinc-900 mb-4">Vista previa del menú</h2>
           <div
-            className="rounded-xl overflow-hidden border border-zinc-200 text-left"
-            style={{ backgroundColor: secondaryColor.hex }}
+            className="rounded-xl overflow-hidden border border-zinc-200 text-left transition-all"
+            style={{ backgroundColor: secondaryColor.hex, fontFamily: fontOption.family }}
           >
             {/* Cover */}
             {coverPreview && (

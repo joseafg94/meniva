@@ -39,7 +39,7 @@ export default async function MenuPage({ params }: PageProps) {
   // Fetch restaurant
   const { data: restaurant } = await supabase
     .from('restaurants')
-    .select('id, name, description, logo_url, cover_url, banner_active, banner_text, banner_color, banner_emoji, banner_expires_at, primary_color, secondary_color')
+    .select('id, name, description, logo_url, cover_url, banner_active, banner_text, banner_color, banner_emoji, banner_expires_at, primary_color, secondary_color, menu_font')
     .eq('slug', slug)
     .single()
 
@@ -77,11 +77,24 @@ export default async function MenuPage({ params }: PageProps) {
   const primaryColor = restaurant.primary_color ?? '#059669'
   const secondaryColor = restaurant.secondary_color ?? '#fafafa'
 
+  const fontMap: Record<string, string> = {
+    inter: 'Inter',
+    playfair: 'Playfair Display',
+    poppins: 'Poppins',
+    lato: 'Lato',
+    merriweather: 'Merriweather',
+  }
+  const fontFamily = fontMap[restaurant.menu_font ?? 'inter']
+
   return (
     <div 
       className="min-h-screen"
-      style={{ backgroundColor: secondaryColor }}
+      style={{ fontFamily, backgroundColor: secondaryColor }}
     >
+      <link
+        rel="stylesheet"
+        href={`https://fonts.googleapis.com/css2?family=${fontFamily.replace(' ', '+')}:wght@400;500;600;700&display=swap`}
+      />
       {/* Promo Banner */}
       {isBannerVisible && (
         <PromoBanner 
@@ -99,19 +112,19 @@ export default async function MenuPage({ params }: PageProps) {
             style={{ backgroundImage: `url(${restaurant.cover_url})` }}
           />
         )}
-        <div className="px-4 py-5 flex items-center gap-3">
+        <div className="px-4 py-6 flex items-center gap-4">
           {restaurant.logo_url && (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={restaurant.logo_url}
               alt={restaurant.name}
-              className="w-12 h-12 rounded-xl object-cover border border-zinc-100 shrink-0"
+              className="w-16 h-16 rounded-2xl object-cover border border-zinc-100 shrink-0 shadow-sm"
             />
           )}
           <div>
-            <h1 className="text-xl font-bold text-zinc-900">{restaurant.name}</h1>
+            <h1 className="text-2xl font-bold text-zinc-900">{restaurant.name}</h1>
             {restaurant.description && (
-              <p className="text-xs text-zinc-400 mt-0.5 leading-relaxed">
+              <p className="text-sm text-zinc-400 mt-0.5 leading-relaxed">
                 {restaurant.description}
               </p>
             )}

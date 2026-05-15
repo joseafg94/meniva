@@ -66,6 +66,7 @@ export async function saveBranding(
 
   const primaryKey = formData.get('primary_color') as string
   const secondaryKey = formData.get('secondary_color') as string
+  const menuFont = formData.get('menu_font') as string
   const logoFile = formData.get('logo') as File | null
   const coverFile = formData.get('cover') as File | null
 
@@ -76,6 +77,9 @@ export async function saveBranding(
   }
   if (secondaryKey && SECONDARY_COLORS[secondaryKey]) {
     updates.secondary_color = SECONDARY_COLORS[secondaryKey]
+  }
+  if (menuFont) {
+    updates.menu_font = menuFont
   }
 
   try {
