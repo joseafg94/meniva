@@ -9,16 +9,21 @@ export type BrandingState = {
 }
 
 const PRIMARY_COLORS: Record<string, string> = {
-  emerald: '#059669',
-  rose: '#e11d48',
-  blue: '#2563eb',
-  amber: '#d97706',
-  violet: '#7c3aed',
-  orange: '#ea580c',
-  teal: '#0d9488',
-  pink: '#db2777',
-  indigo: '#4f46e5',
-  red: '#dc2626',
+  cyan: '#06b6d4',
+  lime: '#65a30d',
+  fuchsia: '#c026d3',
+  yellow: '#eab308',
+  sky: '#0ea5e9',
+  slate: '#475569',
+  brown: '#92400e',
+  mint: '#10b981',
+  magenta: '#d946ef',
+  navy: '#1e3a8a',
+  gold: '#ca8a04',
+  coral: '#f97316',
+  charcoal: '#1f2937',
+  turquoise: '#14b8a6',
+  crimson: '#be123c',
 }
 
 const SECONDARY_COLORS: Record<string, string> = {

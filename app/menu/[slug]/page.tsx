@@ -121,7 +121,7 @@ export default async function MenuPage({ params }: PageProps) {
             <img
               src={restaurant.logo_url}
               alt={restaurant.name}
-              className="w-20 h-20 rounded-2xl object-cover border border-zinc-100 shrink-0 shadow-sm"
+              className="w-24 h-24 rounded-2xl object-cover border border-zinc-100 shrink-0 shadow-md"
             />
           )}
           <div>
