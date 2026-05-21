@@ -28,17 +28,37 @@ interface ProductFormProps {
   }
 }
 
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg']
+const MAX_SIZE_MB = 5
+
+function validateImageFile(file: File): string | null {
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    return 'Solo se permiten imágenes JPG, PNG o WebP'
+  }
+  if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+    return `La imagen no puede superar ${MAX_SIZE_MB}MB`
+  }
+  return null
+}
+
 export function ProductForm({ categories, initialData }: ProductFormProps) {
   const router = useRouter()
   const isEditing = !!initialData
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string | null>(null)
+  const [imageError, setImageError] = useState<string | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(initialData?.image_url ?? null)
   const [isAvailable, setIsAvailable] = useState(initialData?.is_available ?? true)
 
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setImageError(null)
     const file = e.target.files?.[0]
     if (file) {
+      const err = validateImageFile(file)
+      if (err) {
+        setImageError(err)
+        return
+      }
       setPreviewUrl(URL.createObjectURL(file))
     }
   }
@@ -46,13 +66,22 @@ export function ProductForm({ categories, initialData }: ProductFormProps) {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setError(null)
+    setImageError(null)
     const form = e.currentTarget
+    const formData = new FormData(form)
+
+    const rawFile = formData.get('image') as File | null
+    if (rawFile && rawFile.size > 0) {
+      const err = validateImageFile(rawFile)
+      if (err) {
+        setImageError(err)
+        return
+      }
+    }
 
     startTransition(async () => {
-      const formData = new FormData(form)
       formData.set('is_available', String(isAvailable))
 
-      const rawFile = formData.get('image') as File | null
       if (rawFile && rawFile.size > 0) {
         const compressed = await imageCompression(rawFile, {
           maxSizeMB: 0.5,
@@ -109,6 +138,9 @@ export function ProductForm({ categories, initialData }: ProductFormProps) {
             onChange={handleImageChange}
           />
         </div>
+        {imageError && (
+          <p className="text-sm text-red-500 mt-2">{imageError}</p>
+        )}
       </div>
 
       {/* Name */}

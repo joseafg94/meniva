@@ -3,10 +3,31 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { slugify } from '@/lib/utils'
+import { headers } from 'next/headers'
 
 export type AuthState = {
   error?: string | null
   success?: boolean
+}
+
+// Rate limiting simple en memoria
+const registrationAttempts = new Map<string, { count: number; resetAt: number }>()
+
+function checkRateLimit(identifier: string): boolean {
+  const now = Date.now()
+  const record = registrationAttempts.get(identifier)
+
+  if (!record || now > record.resetAt) {
+    registrationAttempts.set(identifier, { count: 1, resetAt: now + 60 * 60 * 1000 }) // 1 hora
+    return true
+  }
+
+  if (record.count >= 3) {
+    return false // máximo 3 registros por IP por hora
+  }
+
+  record.count++
+  return true
 }
 
 export async function login(prevState: AuthState, formData: FormData): Promise<AuthState> {
@@ -32,6 +53,13 @@ export async function login(prevState: AuthState, formData: FormData): Promise<A
 }
 
 export async function register(prevState: AuthState, formData: FormData): Promise<AuthState> {
+  const headersList = await headers()
+  const ip = headersList.get('x-forwarded-for') ?? 'unknown'
+
+  if (!checkRateLimit(ip)) {
+    return { error: 'Demasiados intentos de registro. Intenta de nuevo en una hora.' }
+  }
+
   const name = formData.get('name') as string
   const email = formData.get('email') as string
   const password = formData.get('password') as string

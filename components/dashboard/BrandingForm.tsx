@@ -56,6 +56,19 @@ interface BrandingFormProps {
   }
 }
 
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg']
+const MAX_SIZE_MB = 5
+
+function validateImageFile(file: File): string | null {
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    return 'Solo se permiten imágenes JPG, PNG o WebP'
+  }
+  if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+    return `La imagen no puede superar ${MAX_SIZE_MB}MB`
+  }
+  return null
+}
+
 function colorKeyFromHex(hex: string | null, options: { key: string; hex: string }[]): string {
   if (!hex) return options[0].key
   return options.find(o => o.hex === hex)?.key ?? options[0].key
@@ -76,6 +89,8 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
   const [coverPreview, setCoverPreview] = useState<string | null>(initialData.cover_url)
   const [logoFile, setLogoFile] = useState<File | null>(null)
   const [coverFile, setCoverFile] = useState<File | null>(null)
+  const [logoError, setLogoError] = useState<string | null>(null)
+  const [coverError, setCoverError] = useState<string | null>(null)
 
   const logoInputRef = useRef<HTMLInputElement>(null)
   const coverInputRef = useRef<HTMLInputElement>(null)
@@ -95,8 +110,26 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
+    setLogoError(null)
+    setCoverError(null)
     const form = e.currentTarget
     const formData = new FormData(form)
+
+    if (logoFile && logoFile.size > 0) {
+      const err = validateImageFile(logoFile)
+      if (err) {
+        setLogoError(err)
+        return
+      }
+    }
+
+    if (coverFile && coverFile.size > 0) {
+      const err = validateImageFile(coverFile)
+      if (err) {
+        setCoverError(err)
+        return
+      }
+    }
 
     if (logoFile && logoFile.size > 0) {
       const compressed = await imageCompression(logoFile, {
@@ -126,10 +159,17 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
   function handleImageChange(
     e: React.ChangeEvent<HTMLInputElement>,
     setPreview: (v: string | null) => void,
-    setFile: (v: File | null) => void
+    setFile: (v: File | null) => void,
+    setErrorState: (err: string | null) => void
   ) {
+    setErrorState(null)
     const file = e.target.files?.[0]
     if (!file) return
+    const err = validateImageFile(file)
+    if (err) {
+      setErrorState(err)
+      return
+    }
     setFile(file)
     const url = URL.createObjectURL(file)
     setPreview(url)
@@ -154,7 +194,7 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
           name="logo"
           accept="image/*"
           className="hidden"
-          onChange={(e) => handleImageChange(e, setLogoPreview, setLogoFile)}
+          onChange={(e) => handleImageChange(e, setLogoPreview, setLogoFile, setLogoError)}
         />
         <input
           ref={coverInputRef}
@@ -162,7 +202,7 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
           name="cover"
           accept="image/*"
           className="hidden"
-          onChange={(e) => handleImageChange(e, setCoverPreview, setCoverFile)}
+          onChange={(e) => handleImageChange(e, setCoverPreview, setCoverFile, setCoverError)}
         />
 
         {/* Logo upload */}
@@ -194,6 +234,9 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
                 <p className="text-xs text-zinc-400 mt-1">{logoFile.name}</p>
               )}
               <p className="text-xs text-zinc-400 mt-1">PNG, JPG — máx. 5 MB</p>
+              {logoError && (
+                <p className="text-sm text-red-500 mt-2">{logoError}</p>
+              )}
             </div>
           </div>
         </div>
@@ -260,6 +303,9 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
             <p className="text-xs text-zinc-400 mt-2">{coverFile.name}</p>
           )}
           <p className="text-xs text-zinc-400 mt-1">PNG, JPG — proporción 1546 x 423 píxeles recomendada</p>
+          {coverError && (
+            <p className="text-sm text-red-500 mt-2">{coverError}</p>
+          )}
         </div>
 
         {/* Primary color */}
