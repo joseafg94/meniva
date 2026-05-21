@@ -1,6 +1,7 @@
 'use client'
 
-import { useActionState, useState, useRef, useEffect } from 'react'
+import { useActionState, useState, useRef, useEffect, useTransition } from 'react'
+import imageCompression from 'browser-image-compression'
 import { saveBranding, BrandingState } from '@/app/actions/branding'
 import Image from 'next/image'
 import { Upload, Check, Palette, ImageIcon } from 'lucide-react'
@@ -83,12 +84,44 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
   const secondaryColor = SECONDARY_OPTIONS.find(o => o.key === secondaryKey)!
   const fontOption = FONT_OPTIONS.find(o => o.key === fontKey) || FONT_OPTIONS[0]
 
+  const [, startTransition] = useTransition()
+
   useEffect(() => {
     if (state.success) {
       setLogoFile(null)
       setCoverFile(null)
     }
   }, [state.success])
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    const form = e.currentTarget
+    const formData = new FormData(form)
+
+    if (logoFile && logoFile.size > 0) {
+      const compressed = await imageCompression(logoFile, {
+        maxSizeMB: 0.2,
+        maxWidthOrHeight: 400,
+        useWebWorker: true,
+        fileType: 'image/webp',
+      })
+      formData.set('logo', compressed, compressed.name)
+    }
+
+    if (coverFile && coverFile.size > 0) {
+      const compressed = await imageCompression(coverFile, {
+        maxSizeMB: 0.4,
+        maxWidthOrHeight: 1200,
+        useWebWorker: true,
+        fileType: 'image/webp',
+      })
+      formData.set('cover', compressed, compressed.name)
+    }
+
+    startTransition(() => {
+      formAction(formData)
+    })
+  }
 
   function handleImageChange(
     e: React.ChangeEvent<HTMLInputElement>,
@@ -108,7 +141,7 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <link rel="stylesheet" href={googleFontsUrl} />
       {/* Form column */}
-      <form action={formAction} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-6">
         {/* Hidden color inputs */}
         <input type="hidden" name="primary_color" value={primaryKey} />
         <input type="hidden" name="secondary_color" value={secondaryKey} />

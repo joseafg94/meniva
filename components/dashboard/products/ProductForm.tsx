@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useTransition } from 'react'
+import imageCompression from 'browser-image-compression'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { createProduct, updateProduct } from '@/app/actions/products'
@@ -45,10 +46,23 @@ export function ProductForm({ categories, initialData }: ProductFormProps) {
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
     setError(null)
-    const formData = new FormData(e.currentTarget)
-    formData.set('is_available', String(isAvailable))
+    const form = e.currentTarget
 
     startTransition(async () => {
+      const formData = new FormData(form)
+      formData.set('is_available', String(isAvailable))
+
+      const rawFile = formData.get('image') as File | null
+      if (rawFile && rawFile.size > 0) {
+        const compressed = await imageCompression(rawFile, {
+          maxSizeMB: 0.5,
+          maxWidthOrHeight: 800,
+          useWebWorker: true,
+          fileType: 'image/webp',
+        })
+        formData.set('image', compressed, compressed.name)
+      }
+
       let result
       if (isEditing) {
         formData.set('existing_image_url', initialData.image_url ?? '')

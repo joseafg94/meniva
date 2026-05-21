@@ -5,8 +5,7 @@ import { MenuProductCard } from '@/components/menu/MenuProductCard'
 import { PromoBanner } from '@/components/menu/PromoBanner'
 import { Metadata } from 'next'
 
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
+export const revalidate = 60
 
 interface PageProps {
   params: Promise<{ slug: string }>
