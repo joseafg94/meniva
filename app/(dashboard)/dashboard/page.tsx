@@ -68,9 +68,9 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-900">{restaurant?.name || 'tu restaurante'}</h1>
+        <h1 className="text-2xl font-bold text-emerald-600">{restaurant?.name || 'tu restaurante'}</h1>
         <p className="text-zinc-500">
-          Panel de administración de <span className="font-semibold text-emerald-600">{restaurant?.name || 'tu restaurante'}</span>
+          Panel de administración
         </p>
       </div>
 
