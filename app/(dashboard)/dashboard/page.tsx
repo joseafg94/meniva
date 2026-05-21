@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Package, FolderTree, QrCode } from 'lucide-react'
+import { Package, FolderTree, QrCode, Palette, Megaphone } from 'lucide-react'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -47,12 +47,28 @@ export default async function DashboardPage() {
       color: 'text-purple-500',
       bg: 'bg-purple-50',
     },
+    {
+      title: 'Branding',
+      description: 'Personaliza colores, fuentes y logo de tu menú.',
+      href: '/dashboard/branding',
+      icon: Palette,
+      color: 'text-pink-500',
+      bg: 'bg-pink-50',
+    },
+    {
+      title: 'Banner',
+      description: 'Muestra promociones y avisos en tu menú.',
+      href: '/dashboard/banner',
+      icon: Megaphone,
+      color: 'text-amber-500',
+      bg: 'bg-amber-50',
+    },
   ]
 
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-zinc-900">Bienvenido a Meniva</h1>
+        <h1 className="text-2xl font-bold text-zinc-900">{restaurant?.name || 'tu restaurante'}</h1>
         <p className="text-zinc-500">
           Panel de administración de <span className="font-semibold text-emerald-600">{restaurant?.name || 'tu restaurante'}</span>
         </p>
