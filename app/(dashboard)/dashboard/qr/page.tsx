@@ -85,14 +85,6 @@ export default function QRPage() {
             size={200}
             level="H"
             includeMargin={true}
-            imageSettings={{
-              src: "/favicon.ico",
-              x: undefined,
-              y: undefined,
-              height: 32,
-              width: 32,
-              excavate: true,
-            }}
           />
         </div>
 
