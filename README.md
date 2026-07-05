@@ -1,36 +1,258 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🍽️ Meniva
 
-## Getting Started
+> A modern digital menu platform that helps restaurants and food businesses manage and publish their menus in real time.
 
-First, run the development server:
+<p align="center">
+  <a href="https://getmeniva.vercel.app/" target="_blank">
+    <img src="https://img.shields.io/badge/🌐_Live_Demo-Visit_Meniva-success?style=for-the-badge" alt="Live Demo">
+  </a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=nextdotjs" />
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" />
+  <img src="https://img.shields.io/badge/Supabase-3ECF8E?style=flat-square&logo=supabase&logoColor=white" />
+  <img src="https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white" />
+  <img src="https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white" />
+</p>
+
+---
+
+## 📖 Overview
+
+Meniva is a digital menu platform designed to replace traditional printed menus with a modern, easy-to-manage solution.
+
+Restaurant owners can update dishes, prices, images, and categories instantly through an intuitive administration dashboard, while customers simply scan a QR code to access the latest version of the menu from any device.
+
+---
+
+## 🚀 The Problem
+
+Many restaurants still rely on printed menus, making updates slow, expensive, and inconvenient.
+
+Every price change, new dish, or promotional offer often requires printing new menus, increasing operational costs and delaying updates.
+
+Meniva solves this by allowing businesses to publish changes instantly, ensuring customers always have access to the most up-to-date menu.
+
+---
+
+## ✨ Features
+
+### 👨‍💼 Admin Dashboard
+
+- Create, edit, and delete menu categories
+- Create, edit, and delete products
+- Upload product images
+- Update prices instantly
+- Enable or disable products
+- Generate QR codes
+- Customize branding colors
+- Manage multiple restaurant locations
+
+### 👥 Customer Experience
+
+- Scan a QR code to access the menu
+- Browse products by category
+- Search menu items
+- Fast and responsive interface
+- Optimized for mobile devices
+
+---
+
+## 👥 Who Is It For?
+
+Meniva is designed for businesses that need a flexible digital menu solution, including:
+
+- 🍽️ Restaurants
+- ☕ Coffee Shops
+- 🚚 Food Trucks
+- 🍸 Bars
+- 🥗 Cafés
+- 🏪 Any business with a digital menu
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+- Next.js 15 (App Router)
+- TypeScript
+- Tailwind CSS
+- Lucide React
+- browser-image-compression
+- qrcode.react
+
+### Backend
+
+- Supabase
+- PostgreSQL
+- Supabase Authentication
+- Supabase Storage
+
+### Deployment
+
+- Vercel
+- GitHub
+
+---
+
+## 🔐 Authentication
+
+Authentication is powered by **Supabase Auth**, providing secure access to the administration dashboard.
+
+---
+
+## 🗄️ Database
+
+Meniva uses **PostgreSQL** through Supabase.
+
+### Main Tables
+
+| Table | Description |
+|--------|-------------|
+| `restaurants` | Stores restaurant information |
+| `categories` | Stores menu categories |
+| `products` | Stores menu products |
+| `auth.users` | Authentication managed by Supabase |
+
+---
+
+## 📱 Responsive Design
+
+The application is fully responsive and optimized for:
+
+- 💻 Desktop
+- 📱 Mobile
+- 📲 Tablet
+
+---
+
+## 📂 Project Structure
+
+```text
+app/
+components/
+docs/
+lib/
+public/
+types/
+```
+
+---
+
+## 📸 Screenshots
+
+### Landing Page
+
+![Landing](./screenshots/landing.png)
+
+---
+
+### Dashboard
+
+![Dashboard](./screenshots/dashboard.png)
+
+---
+
+### Product Management
+
+![Products](./screenshots/menu-management.png)
+
+---
+
+### Product Editor
+
+![Editor](./screenshots/product-editor.png)
+
+---
+
+### Customer Menu
+
+![Customer Menu](./screenshots/mobile-menu.png)
+
+---
+
+### QR Code
+
+![QR](./screenshots/qr-code.png)
+
+## 🚀 Getting Started
+
+Clone the repository:
+
+```bash
+git clone https://github.com/joseafg94/meniva.git
+```
+
+Go to the project directory:
+
+```bash
+cd meniva
+```
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Create a `.env.local` file and add your Supabase credentials:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
+```
+
+Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open your browser at:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🎯 Future Improvements
 
-To learn more about Next.js, take a look at the following resources:
+- User management
+- Multi-language support
+- Customer reviews
+- Analytics dashboard
+- Online ordering
+- Payment integration
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🤝 Contributing
 
-## Deploy on Vercel
+Contributions, suggestions, and feedback are always welcome.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+If you'd like to improve Meniva, feel free to fork the repository and submit a pull request.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+## 👨‍💻 Author
+
+**Jose Fuentes**
+
+- 💼 LinkedIn: https://www.linkedin.com/in/jose-fuentes-208972379/
+- 📧 Email: jfuentesg09@gmail.com
+
+---
+
+<p align="center">
+  Built with ❤️ using Next.js, TypeScript and Supabase.
+</p>
