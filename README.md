@@ -133,6 +133,10 @@ The application is fully responsive and optimized for:
 
 ```text
 app/
+(auth)/
+(dashboard)/
+actions/
+menu/
 components/
 docs/
 lib/
@@ -144,39 +148,42 @@ types/
 
 ## 📸 Screenshots
 
+**Note:** The screenshots feature a fictional Spanish-speaking restaurant created for demonstration purposes. Meniva supports customizable branding and can be localized for different languages.
+
+
 ### Landing Page
 
-![Landing](./screenshots/landing.png)
+![Landing](./Screenshots/landing.png)
 
 ---
 
 ### Dashboard
 
-![Dashboard](./screenshots/dashboard.png)
+![Dashboard](./Screenshots/dashboard.png)
 
 ---
 
 ### Product Management
 
-![Products](./screenshots/menu-management.png)
+![Products](./Screenshots/menu-management.png)
 
 ---
 
 ### Product Editor
 
-![Editor](./screenshots/product-editor.png)
+![Editor](./Screenshots/product-editor.png)
 
 ---
 
 ### Customer Menu
 
-![Customer Menu](./screenshots/mobile-menu.png)
+![Customer Menu](./Screenshots/mobile-menu.png)
 
 ---
 
 ### QR Code
 
-![QR](./screenshots/qr-code.png)
+![QR](./Screenshots/qr-code.png)
 
 ## 🚀 Getting Started
 
