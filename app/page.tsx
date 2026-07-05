@@ -1,14 +1,23 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { buttonVariants } from "@/components/ui/button";
+import { Language, uiTranslations } from "@/lib/translate";
+import { LanguageSelector } from "@/components/ui/LanguageSelector";
 
 export default function Home() {
+  const [lang, setLang] = useState<Language>("es");
+  const t = uiTranslations[lang];
+
   return (
     <div className="flex flex-col min-h-screen bg-white">
       <nav className="border-b border-zinc-100 px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
         <div className="flex flex-col items-center text-center -space-y-1">
           <Image src="/logo.svg" alt="Meniva" width={85} height={85} />
         </div>
+        <LanguageSelector currentLanguage={lang} onLanguageChange={setLang} floating={false} />
       </nav>
 
       <main className="flex-1 flex flex-col items-center justify-center p-6 text-center max-w-4xl mx-auto">
@@ -17,46 +26,47 @@ export default function Home() {
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
           </span>
-          La revolución del menú digital en Panamá
+          {t.slogan}
         </div>
 
         <h1 className="text-5xl md:text-7xl font-extrabold text-zinc-900 tracking-tight mb-6 leading-tight">
-          Tu menú digital,<br />
-          <span className="text-emerald-600">siempre actualizado.</span>
+          {t.title1}<br />
+          <span className="text-emerald-600">{t.title2}</span>
         </h1>
         
         <p className="text-xl text-zinc-500 mb-10 max-w-2xl leading-relaxed">
-          Crea un menú QR moderno en minutos. Cambia precios, platos y disponibilidad desde tu celular, sin imprimir nada.
+          {t.subtitle}
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
           <Link href="/register" className={buttonVariants({ variant: "default", className: "bg-emerald-600 hover:bg-emerald-700 text-white h-14 px-10 text-lg font-bold rounded-2xl shadow-xl shadow-emerald-600/20" })}>
-            Registrar mi restaurante
+            {t.registerBtn}
           </Link>
           <Link href="/login" className={buttonVariants({ variant: "outline", className: "h-14 px-10 text-lg font-semibold rounded-2xl border-zinc-300 text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900 transition-all shadow-sm" })}>
-            Entrar al Panel
+            {t.loginBtn}
           </Link>
         </div>
 
         <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 text-left border-t border-zinc-100 pt-12 w-full">
           <div>
-            <p className="font-bold text-zinc-900 mb-1">Cero impresión</p>
-            <p className="text-sm text-zinc-500">Ahorra costos y ayuda al planeta con un menú 100% digital.</p>
+            <p className="font-bold text-zinc-900 mb-1">{t.feature1Title}</p>
+            <p className="text-sm text-zinc-500">{t.feature1Desc}</p>
           </div>
           <div>
-            <p className="font-bold text-zinc-900 mb-1">Control total</p>
-            <p className="text-sm text-zinc-500">Actualiza tu menú al instante desde cualquier lugar.</p>
+            <p className="font-bold text-zinc-900 mb-1">{t.feature2Title}</p>
+            <p className="text-sm text-zinc-500">{t.feature2Desc}</p>
           </div>
           <div>
-            <p className="font-bold text-zinc-900 mb-1">Experiencia premium</p>
-            <p className="text-sm text-zinc-500">Tus clientes amarán la interfaz rápida y moderna.</p>
+            <p className="font-bold text-zinc-900 mb-1">{t.feature3Title}</p>
+            <p className="text-sm text-zinc-500">{t.feature3Desc}</p>
           </div>
         </div>
       </main>
 
       <footer className="py-12 border-t border-zinc-50 text-center">
-        <p className="text-zinc-400 text-xs">© {new Date().getFullYear()} Meniva. Hecho con ❤️ en Panamá.</p>
+        <p className="text-zinc-400 text-xs">© {new Date().getFullYear()} Meniva. {t.footerText}</p>
       </footer>
     </div>
   );
 }
+

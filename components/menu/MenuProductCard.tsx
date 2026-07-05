@@ -1,5 +1,7 @@
 import Image from 'next/image'
 import { Package } from 'lucide-react'
+import { Language, uiTranslations, translateText } from '@/lib/translate'
+import { useState, useEffect } from 'react'
 
 interface MenuProduct {
   id: string
@@ -12,18 +14,43 @@ interface MenuProduct {
   badge_type: string | null
 }
 
-export function MenuProductCard({ product, primaryColor }: { product: MenuProduct; primaryColor: string }) {
+export function MenuProductCard({ product, primaryColor, lang = 'es' }: { product: MenuProduct; primaryColor: string; lang?: Language }) {
+  const [name, setName] = useState(product.name)
+  const [desc, setDesc] = useState(product.description)
+  const [badge, setBadge] = useState(product.badge_type)
+
+  useEffect(() => {
+    if (lang === 'es') {
+      setName(product.name)
+      setDesc(product.description)
+      setBadge(product.badge_type)
+      return
+    }
+
+    translateText(product.name, lang).then(setName)
+    if (product.description) {
+      translateText(product.description, lang).then(setDesc)
+    } else {
+      setDesc(null)
+    }
+    if (product.badge_type) {
+      translateText(product.badge_type, lang).then(setBadge)
+    } else {
+      setBadge(null)
+    }
+  }, [product, lang])
+
   const badgeStyles = {
     'Popular': 'bg-amber-100 text-amber-700 border-amber-200',
     'Nuevo': 'bg-blue-100 text-blue-700 border-blue-200',
     'Recomendado': 'bg-emerald-100 text-emerald-700 border-emerald-200'
-  }[product.badge_type || 'Popular']
+  }[product.badge_type || 'Popular'] || 'bg-amber-100 text-amber-700 border-amber-200'
 
   const highlightStyles = product.is_featured ? {
     'Popular': 'border-amber-200 bg-amber-50/30',
     'Nuevo': 'border-blue-200 bg-blue-50/30',
     'Recomendado': 'border-emerald-200 bg-emerald-50/30'
-  }[product.badge_type || 'Popular'] : 'border-zinc-100'
+  }[product.badge_type || 'Popular'] || 'border-amber-200 bg-amber-50/30' : 'border-zinc-100'
 
   return (
     <div className={`flex gap-3 bg-white rounded-xl border overflow-hidden transition-all ${highlightStyles} ${!product.is_available ? 'opacity-60' : ''}`}>
@@ -32,7 +59,7 @@ export function MenuProductCard({ product, primaryColor }: { product: MenuProduc
         {product.image_url ? (
           <Image
             src={product.image_url}
-            alt={product.name}
+            alt={name}
             fill
             className="object-cover"
             sizes="96px"
@@ -46,13 +73,13 @@ export function MenuProductCard({ product, primaryColor }: { product: MenuProduc
         {!product.is_available ? (
           <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
             <span className="bg-white/90 text-zinc-900 text-[10px] font-bold px-2 py-1 rounded shadow-sm uppercase tracking-wider">
-              Agotado
+              {uiTranslations[lang].soldOut}
             </span>
           </div>
         ) : product.is_featured && (
           <div className="absolute top-1 left-1">
             <span className={`text-[8px] font-bold px-1.5 py-0.5 rounded border uppercase tracking-tight shadow-sm ${badgeStyles}`}>
-              {product.badge_type}
+              {badge}
             </span>
           </div>
         )}
@@ -61,10 +88,10 @@ export function MenuProductCard({ product, primaryColor }: { product: MenuProduc
       {/* Info */}
       <div className="flex-1 py-3 pr-3 flex flex-col justify-between min-w-0">
         <div>
-          <h3 className="font-semibold text-zinc-900 text-sm leading-tight">{product.name}</h3>
-          {product.description && (
+          <h3 className="font-semibold text-zinc-900 text-sm leading-tight">{name}</h3>
+          {desc && (
             <p className="text-xs text-zinc-400 mt-1 leading-relaxed line-clamp-2">
-              {product.description}
+              {desc}
             </p>
           )}
         </div>
@@ -75,3 +102,4 @@ export function MenuProductCard({ product, primaryColor }: { product: MenuProduc
     </div>
   )
 }
+
