@@ -253,6 +253,4 @@ This project is licensed under the MIT License.
 
 ---
 
-<p align="center">
-  Built with ❤️ using Next.js, TypeScript and Supabase.
-</p>
+
