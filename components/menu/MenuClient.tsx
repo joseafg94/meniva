@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Language, uiTranslations, translateText } from '@/lib/translate';
-import { LanguageSelector } from '@/components/ui/LanguageSelector';
+import React from 'react';
+import { uiTranslations } from '@/lib/translate';
 import { CategoryNav } from '@/components/menu/CategoryNav';
 import { MenuProductCard } from '@/components/menu/MenuProductCard';
 import { PromoBanner } from '@/components/menu/PromoBanner';
@@ -49,59 +48,8 @@ interface MenuClientProps {
 }
 
 export function MenuClient({ restaurant, categories, products, isBannerVisible }: MenuClientProps) {
-  const [lang, setLang] = useState<Language>('es');
-  const [translations, setTranslations] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    if (lang === 'es') return;
-
-    const stringsToTranslate = new Set<string>();
-    
-    if (restaurant.description) {
-      stringsToTranslate.add(restaurant.description);
-    }
-    
-    categories.forEach(cat => {
-      if (cat.name) stringsToTranslate.add(cat.name);
-    });
-
-    products.forEach(p => {
-      if (p.name) stringsToTranslate.add(p.name);
-      if (p.description) stringsToTranslate.add(p.description);
-      if (p.badge_type) stringsToTranslate.add(p.badge_type);
-    });
-
-    // Translate each string and update state
-    Array.from(stringsToTranslate).forEach(async (str) => {
-      const key = `${lang}_${str}`;
-      if (translations[key]) return; // Already translated
-
-      const translated = await translateText(str, lang);
-      setTranslations(prev => ({
-        ...prev,
-        [key]: translated
-      }));
-    });
-  }, [lang, categories, products, restaurant.description]);
-
-  const t = (text: string | null | undefined) => {
-    if (!text) return '';
-    if (lang === 'es') return text;
-    return translations[`${lang}_${text}`] ?? text;
-  };
-
-  const tUi = (key: keyof typeof uiTranslations['es']) => {
-    return uiTranslations[lang][key];
-  };
-
-  // Dynamically map translations only for categories
-  const translatedCategories = (categories ?? []).map(cat => ({
-    ...cat,
-    name: t(cat.name)
-  }));
-
   // Group products by category using original products
-  const productsByCategory = translatedCategories.map((cat) => ({
+  const productsByCategory = (categories ?? []).map((cat) => ({
     ...cat,
     products: (products ?? []).filter((p) => p.category_id === cat.id),
   })).filter((cat) => cat.products.length > 0);
@@ -136,7 +84,7 @@ export function MenuClient({ restaurant, categories, products, isBannerVisible }
       {/* Promo Banner */}
       {isBannerVisible && (
         <PromoBanner 
-          banner_text={t(restaurant.banner_text)}
+          banner_text={restaurant.banner_text}
           banner_color={restaurant.banner_color}
           banner_emoji={restaurant.banner_emoji}
         />
@@ -163,7 +111,7 @@ export function MenuClient({ restaurant, categories, products, isBannerVisible }
             <h1 className="text-3xl font-bold text-zinc-900">{restaurant.name}</h1>
             {restaurant.description && (
               <p className="text-sm text-zinc-400 mt-0.5 leading-relaxed">
-                {t(restaurant.description)}
+                {restaurant.description}
               </p>
             )}
           </div>
@@ -171,8 +119,8 @@ export function MenuClient({ restaurant, categories, products, isBannerVisible }
       </div>
 
       {/* Category nav */}
-      {translatedCategories.length > 0 && (
-        <CategoryNav categories={translatedCategories} primaryColor={primaryColor} />
+      {categories && categories.length > 0 && (
+        <CategoryNav categories={categories} primaryColor={primaryColor} />
       )}
 
       {/* Menu sections */}
@@ -188,7 +136,6 @@ export function MenuClient({ restaurant, categories, products, isBannerVisible }
                   key={product.id} 
                   product={product} 
                   primaryColor={primaryColor} 
-                  lang={lang}
                 />
               ))}
             </div>
@@ -199,7 +146,7 @@ export function MenuClient({ restaurant, categories, products, isBannerVisible }
         {uncategorized.length > 0 && (
           <section id="sin-categoria">
             <h2 className="text-base font-semibold text-zinc-900 mb-4 pb-2 border-b border-zinc-100">
-              {tUi('others')}
+              {uiTranslations.others}
             </h2>
             <div className="space-y-3">
               {uncategorized.map((product) => (
@@ -207,7 +154,6 @@ export function MenuClient({ restaurant, categories, products, isBannerVisible }
                   key={product.id} 
                   product={product} 
                   primaryColor={primaryColor} 
-                  lang={lang}
                 />
               ))}
             </div>
@@ -217,18 +163,16 @@ export function MenuClient({ restaurant, categories, products, isBannerVisible }
         {/* Empty state */}
         {productsByCategory.length === 0 && uncategorized.length === 0 && (
           <div className="text-center py-16">
-            <p className="text-zinc-400 text-sm">{tUi('emptyMenu')}</p>
+            <p className="text-zinc-400 text-sm">{uiTranslations.emptyMenu}</p>
           </div>
         )}
       </div>
 
-      {/* Language Selector */}
-      <LanguageSelector currentLanguage={lang} onLanguageChange={setLang} floating={true} />
 
       {/* Footer */}
       <div className="text-center py-6 pb-safe">
         <p className="text-[10px] text-zinc-300">
-          {tUi('createdWith')} <span className="text-emerald-500 font-medium">Meniva</span>
+          {uiTranslations.createdWith} <span className="text-emerald-500 font-medium">Meniva</span>
         </p>
       </div>
     </div>

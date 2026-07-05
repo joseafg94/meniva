@@ -1,7 +1,6 @@
 import Image from 'next/image'
 import { Package } from 'lucide-react'
-import { Language, uiTranslations, translateText } from '@/lib/translate'
-import { useState, useEffect } from 'react'
+import { uiTranslations } from '@/lib/translate'
 
 interface MenuProduct {
   id: string
@@ -14,31 +13,10 @@ interface MenuProduct {
   badge_type: string | null
 }
 
-export function MenuProductCard({ product, primaryColor, lang = 'es' }: { product: MenuProduct; primaryColor: string; lang?: Language }) {
-  const [name, setName] = useState(product.name)
-  const [desc, setDesc] = useState(product.description)
-  const [badge, setBadge] = useState(product.badge_type)
-
-  useEffect(() => {
-    if (lang === 'es') {
-      setName(product.name)
-      setDesc(product.description)
-      setBadge(product.badge_type)
-      return
-    }
-
-    translateText(product.name, lang).then(setName)
-    if (product.description) {
-      translateText(product.description, lang).then(setDesc)
-    } else {
-      setDesc(null)
-    }
-    if (product.badge_type) {
-      translateText(product.badge_type, lang).then(setBadge)
-    } else {
-      setBadge(null)
-    }
-  }, [product, lang])
+export function MenuProductCard({ product, primaryColor }: { product: MenuProduct; primaryColor: string }) {
+  const name = product.name
+  const desc = product.description
+  const badge = product.badge_type
 
   const badgeStyles = {
     'Popular': 'bg-amber-100 text-amber-700 border-amber-200',
@@ -73,7 +51,7 @@ export function MenuProductCard({ product, primaryColor, lang = 'es' }: { produc
         {!product.is_available ? (
           <div className="absolute inset-0 bg-black/20 flex items-center justify-center">
             <span className="bg-white/90 text-zinc-900 text-[10px] font-bold px-2 py-1 rounded shadow-sm uppercase tracking-wider">
-              {uiTranslations[lang].soldOut}
+              {uiTranslations.soldOut}
             </span>
           </div>
         ) : product.is_featured && (

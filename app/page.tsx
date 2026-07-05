@@ -1,15 +1,12 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { buttonVariants } from "@/components/ui/button";
-import { Language, uiTranslations } from "@/lib/translate";
-import { LanguageSelector } from "@/components/ui/LanguageSelector";
+import { uiTranslations } from "@/lib/translate";
 
 export default function Home() {
-  const [lang, setLang] = useState<Language>("es");
-  const t = uiTranslations[lang];
+  const t = uiTranslations;
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
@@ -17,7 +14,6 @@ export default function Home() {
         <div className="flex flex-col items-center text-center -space-y-1">
           <Image src="/logo.svg" alt="Meniva" width={85} height={85} />
         </div>
-        <LanguageSelector currentLanguage={lang} onLanguageChange={setLang} floating={false} />
       </nav>
 
       <main className="flex-1 flex flex-col items-center justify-center p-6 text-center max-w-4xl mx-auto">
