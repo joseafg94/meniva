@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Package, FolderTree, QrCode, Palette, Megaphone } from 'lucide-react'
+import { Package, FolderTree, QrCode, Palette, Megaphone, MessageCircle } from 'lucide-react'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -62,6 +62,14 @@ export default async function DashboardPage() {
       icon: Megaphone,
       color: 'text-amber-500',
       bg: 'bg-amber-50',
+    },
+    {
+      title: 'WhatsApp',
+      description: 'Configura el botón de contacto de tu menú',
+      href: '/dashboard/whatsapp',
+      icon: MessageCircle,
+      color: 'text-emerald-500',
+      bg: 'bg-emerald-50',
     },
   ]
 

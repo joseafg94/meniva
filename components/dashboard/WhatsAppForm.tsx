@@ -7,6 +7,40 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { MessageCircle } from 'lucide-react'
 
+const COUNTRY_CODES = [
+  { code: '+507', flag: '🇵🇦', name: 'Panamá' },
+  { code: '+1', flag: '🇺🇸', name: 'USA / Canadá' },
+  { code: '+52', flag: '🇲🇽', name: 'México' },
+  { code: '+503', flag: '🇸🇻', name: 'El Salvador' },
+  { code: '+502', flag: '🇬🇹', name: 'Guatemala' },
+  { code: '+504', flag: '🇭🇳', name: 'Honduras' },
+  { code: '+505', flag: '🇳🇮', name: 'Nicaragua' },
+  { code: '+506', flag: '🇨🇷', name: 'Costa Rica' },
+  { code: '+57', flag: '🇨🇴', name: 'Colombia' },
+  { code: '+58', flag: '🇻🇪', name: 'Venezuela' },
+  { code: '+51', flag: '🇵🇪', name: 'Perú' },
+  { code: '+593', flag: '🇪🇨', name: 'Ecuador' },
+  { code: '+34', flag: '🇪🇸', name: 'España' },
+]
+
+function parseInitialNumber(fullNumber: string | null) {
+  if (!fullNumber) return { countryCode: '+507', localNumber: '' }
+
+  const sortedCodes = [...COUNTRY_CODES].sort((a, b) => b.code.replace('+', '').length - a.code.replace('+', '').length)
+
+  for (const item of sortedCodes) {
+    const cleanCode = item.code.replace('+', '')
+    if (fullNumber.startsWith(cleanCode)) {
+      return {
+        countryCode: item.code,
+        localNumber: fullNumber.slice(cleanCode.length)
+      }
+    }
+  }
+
+  return { countryCode: '+507', localNumber: fullNumber }
+}
+
 interface WhatsAppFormProps {
   initialData: {
     whatsapp_number: string | null
@@ -16,7 +50,9 @@ interface WhatsAppFormProps {
 }
 
 export function WhatsAppForm({ initialData }: WhatsAppFormProps) {
-  const [whatsappNumber, setWhatsappNumber] = useState(initialData.whatsapp_number || '')
+  const initialParsed = parseInitialNumber(initialData.whatsapp_number)
+  const [countryCode, setCountryCode] = useState(initialParsed.countryCode)
+  const [localNumber, setLocalNumber] = useState(initialParsed.localNumber)
   const [whatsappButtonType, setWhatsappButtonType] = useState(initialData.whatsapp_button_type || 'Consultar')
   const [whatsappMessage, setWhatsappMessage] = useState(
     initialData.whatsapp_message || 'Hola, estoy revisando el menú y me gustaría hacer una consulta / pedido.'
@@ -54,18 +90,33 @@ export function WhatsAppForm({ initialData }: WhatsAppFormProps) {
       <form action={handleSubmit} className="p-6 space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <Label htmlFor="whatsapp_number">Número de WhatsApp</Label>
-            <Input
-              id="whatsapp_number"
-              name="whatsapp_number"
-              type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              value={whatsappNumber}
-              onChange={(e) => setWhatsappNumber(e.target.value)}
-              placeholder="Ej: 50766778899"
-            />
-            <p className="text-[10px] text-zinc-400">Ingresa solo dígitos, incluyendo el código de país. Déjalo en blanco para ocultar el botón.</p>
+            <Label htmlFor="whatsapp_number_local">Número de WhatsApp</Label>
+            <div className="flex gap-2">
+              <select
+                id="country_code"
+                value={countryCode}
+                onChange={(e) => setCountryCode(e.target.value)}
+                className="flex h-8 w-[100px] shrink-0 items-center rounded-lg border border-input bg-background px-2 py-1 text-sm transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {COUNTRY_CODES.map((item) => (
+                  <option key={item.code} value={item.code}>
+                    {item.flag} {item.code}
+                  </option>
+                ))}
+              </select>
+              <Input
+                id="whatsapp_number_local"
+                type="text"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                value={localNumber}
+                onChange={(e) => setLocalNumber(e.target.value.replace(/\D/g, ''))}
+                placeholder="Ej: 66778899"
+                className="flex-1"
+              />
+            </div>
+            <input type="hidden" name="whatsapp_number" value={localNumber ? `${countryCode.replace('+', '')}${localNumber}` : ''} />
+            <p className="text-[10px] text-zinc-400">Selecciona el código de tu país e ingresa tu número local sin guiones ni espacios. Déjalo en blanco para ocultar el botón.</p>
           </div>
 
           <div className="space-y-2">
