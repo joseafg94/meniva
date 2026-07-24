@@ -135,6 +135,7 @@ export interface Database {
           phone: string
           consent_given: boolean
           consent_timestamp: string
+          source: string | null
           created_at: string
         }
         Insert: {
@@ -145,6 +146,7 @@ export interface Database {
           phone: string
           consent_given?: boolean
           consent_timestamp?: string
+          source?: string | null
           created_at?: string
         }
         Update: {
@@ -155,6 +157,7 @@ export interface Database {
           phone?: string
           consent_given?: boolean
           consent_timestamp?: string
+          source?: string | null
           created_at?: string
         }
       }
