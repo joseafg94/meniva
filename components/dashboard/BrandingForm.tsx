@@ -455,7 +455,7 @@ export function BrandingForm({ initialData, categories, products }: BrandingForm
         <div className="bg-white border border-zinc-200 rounded-xl p-4 md:p-6">
           <h2 className="text-sm font-semibold text-zinc-900 mb-4">Vista previa del menú</h2>
           {/* Frame móvil neutro */}
-          <div className="relative mx-auto w-[280px] h-[560px] bg-zinc-800 rounded-[24px] p-[6px] shadow-2xl">
+          <div className="relative mx-auto w-[250px] h-[560px] bg-zinc-800 rounded-[24px] p-[6px] shadow-2xl">
             {/* Pantalla */}
             <div className="w-full h-full rounded-[21px] overflow-hidden bg-white flex flex-col">
               {/* Contenido del menú */}
@@ -482,7 +482,7 @@ export function BrandingForm({ initialData, categories, products }: BrandingForm
                   </div>
                 </div>
                 {/* Category tabs */}
-                <div className="bg-white border-b border-zinc-100 px-3 py-2 flex gap-1.5 overflow-x-auto scrollbar-none">
+                <div className="bg-white border-b border-zinc-100 px-2 py-2 flex gap-1.5 overflow-x-auto scrollbar-none">
                   {(categories.length > 0 ? categories : [{ id: 'a', name: 'Entradas' }, { id: 'b', name: 'Principales' }]).map((cat) => {
                     const isActive = (selectedCatId ?? categories[0]?.id) === cat.id
                     return (
@@ -490,7 +490,7 @@ export function BrandingForm({ initialData, categories, products }: BrandingForm
                         key={cat.id}
                         type="button"
                         onClick={() => setSelectedCatId(cat.id)}
-                        className="px-2.5 py-1 rounded-full text-[10px] font-medium whitespace-nowrap transition-colors"
+                        className="px-1.5 py-1 rounded-full text-[10px] font-medium whitespace-nowrap transition-colors"
                         style={isActive ? { backgroundColor: primaryColor.hex, color: '#ffffff' } : { color: '#71717a' }}
                       >
                         {cat.name}
