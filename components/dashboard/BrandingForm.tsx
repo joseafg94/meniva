@@ -455,7 +455,7 @@ export function BrandingForm({ initialData, categories, products }: BrandingForm
         <div className="bg-white border border-zinc-200 rounded-xl p-4 md:p-6">
           <h2 className="text-sm font-semibold text-zinc-900 mb-4">Vista previa del menú</h2>
           {/* Frame móvil neutro */}
-          <div className="relative mx-auto w-[280px] h-[560px] bg-zinc-800 rounded-[24px] p-[3px] shadow-2xl">
+          <div className="relative mx-auto w-[280px] h-[560px] bg-zinc-800 rounded-[24px] p-[6px] shadow-2xl">
             {/* Pantalla */}
             <div className="w-full h-full rounded-[21px] overflow-hidden bg-white flex flex-col">
               {/* Contenido del menú */}
@@ -510,9 +510,9 @@ export function BrandingForm({ initialData, categories, products }: BrandingForm
                     return displayProducts.map((p) => (
                       <div key={p.id} className="flex gap-2 bg-white rounded-lg border border-zinc-100 overflow-hidden shadow-sm">
                         {p.image_url ? (
-                          <Image src={p.image_url} alt={p.name} width={48} height={48} className="w-12 h-12 object-cover shrink-0" />
+                          <Image src={p.image_url} alt={p.name} width={48} height={48} className="w-14 h-13 object-cover shrink-0" />
                         ) : (
-                          <div className="w-12 h-12 bg-zinc-100 shrink-0" />
+                          <div className="w-14 h-13 bg-zinc-100 shrink-0" />
                         )}
                         <div className="flex-1 py-1.5 pr-2 flex flex-col justify-between min-w-0">
                           <p className="text-[10px] font-semibold text-zinc-900 leading-tight line-clamp-2">{p.name}</p>
