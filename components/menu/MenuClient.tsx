@@ -63,6 +63,9 @@ interface Restaurant {
   yappy_qr_url: string | null;
   yappy_active: boolean;
   google_review_url: string | null;
+  is_open: boolean | null;
+  footer_address: string | null;
+  footer_phone: string | null;
 }
 
 interface MenuClientProps {
@@ -190,7 +193,21 @@ export function MenuClient({ restaurant, categories, products, isBannerVisible }
             />
           )}
           <div>
-            <h1 className="text-3xl font-bold text-zinc-900">{restaurant.name}</h1>
+            <div className="flex items-center gap-2 flex-wrap">
+              <h1 className="text-3xl font-bold text-zinc-900">{restaurant.name}</h1>
+              {restaurant.is_open === true && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
+                  Abierto
+                </span>
+              )}
+              {restaurant.is_open === false && (
+                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-red-50 text-red-600 border border-red-200">
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-500 inline-block" />
+                  Cerrado
+                </span>
+              )}
+            </div>
             {restaurant.description && (
               <p className="text-sm text-zinc-400 mt-0.5 leading-relaxed">
                 {restaurant.description}
@@ -355,6 +372,15 @@ export function MenuClient({ restaurant, categories, products, isBannerVisible }
               {feedbackMessage || '¡Gracias por tu opinión!'}
             </div>
           )}
+        </div>
+      )}
+
+      {/* Local info footer */}
+      {(restaurant.footer_address || restaurant.footer_phone) && (
+        <div className="text-center text-xs text-zinc-400 py-4 border-t border-zinc-100">
+          {restaurant.footer_address && <span>{restaurant.footer_address}</span>}
+          {restaurant.footer_address && restaurant.footer_phone && <span> · </span>}
+          {restaurant.footer_phone && <span>{restaurant.footer_phone}</span>}
         </div>
       )}
 

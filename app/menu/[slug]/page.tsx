@@ -36,7 +36,7 @@ export default async function MenuPage({ params }: PageProps) {
   // Fetch restaurant
   const { data: restaurant } = await supabase
     .from('restaurants')
-    .select('id, name, description, logo_url, cover_url, banner_active, banner_text, banner_color, banner_emoji, banner_expires_at, primary_color, secondary_color, menu_font, whatsapp_number, whatsapp_button_type, whatsapp_message, yappy_qr_url, yappy_active, google_review_url')
+    .select('id, name, description, logo_url, cover_url, banner_active, banner_text, banner_color, banner_emoji, banner_expires_at, primary_color, secondary_color, menu_font, whatsapp_number, whatsapp_button_type, whatsapp_message, yappy_qr_url, yappy_active, google_review_url, is_open, footer_address, footer_phone')
     .eq('slug', slug)
     .single()
 

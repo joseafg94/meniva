@@ -15,30 +15,30 @@ const groups = [
   {
     label: 'Gestión del Menú',
     items: [
-      { title: 'Productos', description: 'Gestiona platos y bebidas', href: '/dashboard/products', icon: Package },
-      { title: 'Categorías', description: 'Organiza tu menú por secciones', href: '/dashboard/categories', icon: FolderTree },
+      { title: 'Productos', description: 'Gestiona platos y bebidas', href: '/dashboard/products', icon: Package, iconBg: 'bg-blue-50', iconColor: 'text-blue-600' },
+      { title: 'Categorías', description: 'Organiza tu menú por secciones', href: '/dashboard/categories', icon: FolderTree, iconBg: 'bg-emerald-50', iconColor: 'text-emerald-600' },
     ],
   },
   {
     label: 'Personalización',
     items: [
-      { title: 'Branding', description: 'Colores, fuentes y logo', href: '/dashboard/branding', icon: Palette },
-      { title: 'Banner', description: 'Promociones y avisos', href: '/dashboard/banner', icon: Megaphone },
+      { title: 'Branding', description: 'Colores, fuentes y logo', href: '/dashboard/branding', icon: Palette, iconBg: 'bg-purple-50', iconColor: 'text-purple-600' },
+      { title: 'Banner', description: 'Promociones y avisos', href: '/dashboard/banner', icon: Megaphone, iconBg: 'bg-amber-50', iconColor: 'text-amber-600' },
     ],
   },
   {
     label: 'Cobro y Promoción',
     items: [
-      { title: 'Yappy', description: 'Recibe pagos con tu QR', href: '/dashboard/yappy', icon: Wallet },
-      { title: 'WhatsApp', description: 'Botón de contacto directo', href: '/dashboard/whatsapp', icon: MessageCircle },
-      { title: 'Mi QR', description: 'Descarga y comparte tu código QR', href: '/dashboard/qr', icon: QrCode },
+      { title: 'Yappy', description: 'Recibe pagos con tu QR', href: '/dashboard/yappy', icon: Wallet, iconBg: 'bg-violet-50', iconColor: 'text-violet-600' },
+      { title: 'WhatsApp', description: 'Botón de contacto directo', href: '/dashboard/whatsapp', icon: MessageCircle, iconBg: 'bg-green-50', iconColor: 'text-green-600' },
+      { title: 'Mi QR', description: 'Descarga y comparte tu código QR', href: '/dashboard/qr', icon: QrCode, iconBg: 'bg-indigo-50', iconColor: 'text-indigo-600' },
     ],
   },
   {
     label: 'Clientes',
     items: [
-      { title: 'Club VIP', description: 'Captura y lista de clientes', href: '/dashboard/customers', icon: Users },
-      { title: 'Reseñas', description: 'Filtro inteligente de opiniones', href: '/dashboard/reviews', icon: Star },
+      { title: 'Club VIP', description: 'Captura y lista de clientes', href: '/dashboard/customers', icon: Users, iconBg: 'bg-rose-50', iconColor: 'text-rose-600' },
+      { title: 'Reseñas', description: 'Filtro inteligente de opiniones', href: '/dashboard/reviews', icon: Star, iconBg: 'bg-yellow-50', iconColor: 'text-yellow-600' },
     ],
   },
 ]
@@ -80,8 +80,8 @@ export default async function DashboardPage() {
                     key={item.href + idx}
                     className="flex items-center gap-4 px-4 py-4 border-b border-zinc-100 last:border-b-0 opacity-50 cursor-not-allowed"
                   >
-                    <div className="w-9 h-9 rounded-lg bg-zinc-100 flex items-center justify-center flex-shrink-0">
-                      <item.icon size={18} className="text-zinc-400" />
+                    <div className={`w-9 h-9 rounded-lg ${item.iconBg} flex items-center justify-center flex-shrink-0`}>
+                      <item.icon size={18} className={item.iconColor} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-zinc-900">{item.title}</p>
@@ -95,8 +95,8 @@ export default async function DashboardPage() {
                     href={item.href}
                     className="flex items-center gap-4 px-4 py-4 border-b border-zinc-100 last:border-b-0 hover:bg-zinc-50 transition-colors group"
                   >
-                    <div className="w-9 h-9 rounded-lg bg-zinc-100 group-hover:bg-zinc-200 flex items-center justify-center flex-shrink-0 transition-colors">
-                      <item.icon size={18} className="text-zinc-600" />
+                    <div className={`w-9 h-9 rounded-lg ${item.iconBg} flex items-center justify-center flex-shrink-0 transition-colors`}>
+                      <item.icon size={18} className={item.iconColor} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-zinc-900">{item.title}</p>

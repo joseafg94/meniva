@@ -78,6 +78,9 @@ export async function saveBranding(
   const secondaryKey = formData.get('secondary_color') as string
   const menuFont = formData.get('menu_font') as string
   const description = formData.get('description') as string
+  const isOpen = formData.get('is_open') as string | null
+  const footerAddress = formData.get('footer_address') as string | null
+  const footerPhone = formData.get('footer_phone') as string | null
   const logoFile = formData.get('logo') as File | null
   const coverFile = formData.get('cover') as File | null
 
@@ -94,6 +97,15 @@ export async function saveBranding(
   }
   if (typeof description === 'string') {
     updates.description = description.slice(0, 120)
+  }
+  if (isOpen !== null) {
+    (updates as Record<string, unknown>).is_open = isOpen === 'true'
+  }
+  if (footerAddress !== null) {
+    updates.footer_address = footerAddress.slice(0, 80)
+  }
+  if (footerPhone !== null) {
+    updates.footer_phone = footerPhone
   }
 
   try {

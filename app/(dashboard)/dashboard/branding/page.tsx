@@ -14,11 +14,26 @@ export default async function BrandingPage() {
 
   const { data: restaurant } = await supabase
     .from('restaurants')
-    .select('name, description, logo_url, cover_url, primary_color, secondary_color, menu_font')
+    .select('id, name, description, logo_url, cover_url, primary_color, secondary_color, menu_font, is_open, footer_address, footer_phone')
     .eq('user_id', user.id)
     .single()
 
   if (!restaurant) redirect('/dashboard')
+
+  const [{ data: categories }, { data: products }] = await Promise.all([
+    supabase
+      .from('categories')
+      .select('id, name')
+      .eq('restaurant_id', restaurant.id)
+      .order('position'),
+    supabase
+      .from('products')
+      .select('id, name, price, image_url, category_id')
+      .eq('restaurant_id', restaurant.id)
+      .eq('is_available', true)
+      .order('position')
+      .limit(6),
+  ])
 
   return (
     <div className="px-4 py-6 md:px-8 md:py-8 max-w-4xl mx-auto">
@@ -28,7 +43,11 @@ export default async function BrandingPage() {
           Personaliza el logo, la portada y los colores de tu menú público.
         </p>
       </div>
-      <BrandingForm initialData={restaurant} />
+      <BrandingForm
+        initialData={restaurant}
+        categories={categories ?? []}
+        products={products ?? []}
+      />
     </div>
   )
 }

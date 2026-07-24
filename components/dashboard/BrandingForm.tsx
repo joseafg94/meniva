@@ -53,7 +53,12 @@ interface BrandingFormProps {
     menu_font: string | null
     name: string
     description: string | null
+    is_open: boolean | null
+    footer_address: string | null
+    footer_phone: string | null
   }
+  categories: { id: string; name: string }[]
+  products: { id: string; name: string; price: number; image_url: string | null; category_id: string | null }[]
 }
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg']
@@ -74,7 +79,7 @@ function colorKeyFromHex(hex: string | null, options: { key: string; hex: string
   return options.find(o => o.hex === hex)?.key ?? options[0].key
 }
 
-export function BrandingForm({ initialData }: BrandingFormProps) {
+export function BrandingForm({ initialData, categories, products }: BrandingFormProps) {
   const [state, formAction, isPending] = useActionState<BrandingState, FormData>(saveBranding, {})
 
   const [primaryKey, setPrimaryKey] = useState(
@@ -85,6 +90,9 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
   )
   const [fontKey, setFontKey] = useState(initialData.menu_font ?? 'inter')
   const [description, setDescription] = useState(initialData.description ?? '')
+  const [isOpen, setIsOpen] = useState<boolean | null>(initialData.is_open ?? null)
+  const [footerAddress, setFooterAddress] = useState(initialData.footer_address ?? '')
+  const [footerPhone, setFooterPhone] = useState(initialData.footer_phone ?? '')
   const [logoPreview, setLogoPreview] = useState<string | null>(initialData.logo_url)
   const [coverPreview, setCoverPreview] = useState<string | null>(initialData.cover_url)
   const [logoFile, setLogoFile] = useState<File | null>(null)
@@ -370,6 +378,75 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
           </div>
         </div>
 
+        {/* Información del local */}
+        <div className="bg-white border border-zinc-200 rounded-xl p-4 md:p-6 space-y-4">
+          <div>
+            <h2 className="text-sm font-semibold text-zinc-900 mb-1">Información del local</h2>
+            <p className="text-xs text-zinc-400 mb-4">Aparece en el footer del menú público</p>
+          </div>
+          {/* Toggle is_open */}
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-zinc-800">¿Estás abierto ahora?</p>
+              <p className="text-xs text-zinc-400">Muestra un badge en el menú público</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsOpen(prev => prev === true ? false : true)}
+              className={cn(
+                'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none',
+                isOpen === true ? 'bg-emerald-500' : 'bg-zinc-200'
+              )}
+              aria-checked={isOpen === true}
+              role="switch"
+            >
+              <span
+                className={cn(
+                  'inline-block h-4 w-4 transform rounded-full bg-white shadow transition-transform',
+                  isOpen === true ? 'translate-x-6' : 'translate-x-1'
+                )}
+              />
+            </button>
+            <input type="hidden" name="is_open" value={isOpen === true ? 'true' : 'false'} />
+          </div>
+          {/* Dirección */}
+          <div>
+            <label htmlFor="footer_address" className="text-sm font-medium text-zinc-800 mb-1 block">
+              Dirección corta
+            </label>
+            <input
+              id="footer_address"
+              name="footer_address"
+              type="text"
+              value={footerAddress}
+              onChange={(e) => setFooterAddress(e.target.value)}
+              placeholder="Ej: Av. Central, David, Chiriquí"
+              maxLength={80}
+              className="w-full border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
+            />
+            <div className="flex justify-end mt-1">
+              <span className={cn('text-[10px]', footerAddress.length >= 72 ? 'text-red-500' : 'text-zinc-400')}>
+                {footerAddress.length}/80
+              </span>
+            </div>
+          </div>
+          {/* Teléfono */}
+          <div>
+            <label htmlFor="footer_phone" className="text-sm font-medium text-zinc-800 mb-1 block">
+              Teléfono del local
+            </label>
+            <input
+              id="footer_phone"
+              name="footer_phone"
+              type="tel"
+              value={footerPhone}
+              onChange={(e) => setFooterPhone(e.target.value)}
+              placeholder="Ej: +507 6677-8899"
+              className="w-full border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
+            />
+          </div>
+        </div>
+
         {/* Feedback */}
         {state.error && (
           <p className="text-sm text-red-600 bg-red-50 border border-red-100 px-4 py-3 rounded-lg">{state.error}</p>
@@ -422,29 +499,49 @@ export function BrandingForm({ initialData }: BrandingFormProps) {
               </div>
               {/* Category tabs */}
               <div className="bg-white border-b border-zinc-100 px-3 py-2 flex gap-1.5 overflow-x-hidden">
-                {['Entradas', 'Principales'].map((cat, i) => (
+                {(categories.length > 0 ? categories.slice(0, 4) : [{ id: 'a', name: 'Entradas' }, { id: 'b', name: 'Principales' }]).map((cat, i) => (
                   <span
-                    key={cat}
+                    key={cat.id}
                     className="px-2.5 py-1 rounded-full text-[10px] font-medium whitespace-nowrap"
                     style={i === 0 ? { backgroundColor: primaryColor.hex, color: '#ffffff' } : { color: '#71717a' }}
                   >
-                    {cat}
+                    {cat.name}
                   </span>
                 ))}
               </div>
-              {/* Sample products */}
+              {/* Products */}
               <div className="p-3 space-y-2">
-                {['Pasta Carbonara', 'Ensalada César'].map((name, i) => (
-                  <div key={name} className="flex gap-2 bg-white rounded-lg border border-zinc-100 overflow-hidden shadow-sm">
-                    <div className="w-14 h-14 bg-zinc-100 shrink-0" />
-                    <div className="flex-1 py-2 pr-2 flex flex-col justify-between min-w-0">
-                      <p className="text-[11px] font-semibold text-zinc-900 leading-tight">{name}</p>
-                      <p className="text-[11px] font-bold" style={{ color: primaryColor.hex }}>
-                        ${(8.50 + i * 3.5).toFixed(2)}
-                      </p>
+                {(() => {
+                  const firstCat = categories[0]
+                  const previewProducts = firstCat
+                    ? products.filter(p => p.category_id === firstCat.id).slice(0, 3)
+                    : products.slice(0, 3)
+                  if (previewProducts.length === 0) {
+                    // fallback placeholder
+                    return [{ id: '1', name: 'Pasta Carbonara', price: 8.50, image_url: null }, { id: '2', name: 'Ensalada César', price: 12.00, image_url: null }].map((p) => (
+                      <div key={p.id} className="flex gap-2 bg-white rounded-lg border border-zinc-100 overflow-hidden shadow-sm">
+                        <div className="w-14 h-14 bg-zinc-100 shrink-0" />
+                        <div className="flex-1 py-2 pr-2 flex flex-col justify-between min-w-0">
+                          <p className="text-[11px] font-semibold text-zinc-900 leading-tight">{p.name}</p>
+                          <p className="text-[11px] font-bold" style={{ color: primaryColor.hex }}>${p.price.toFixed(2)}</p>
+                        </div>
+                      </div>
+                    ))
+                  }
+                  return previewProducts.map((p) => (
+                    <div key={p.id} className="flex gap-2 bg-white rounded-lg border border-zinc-100 overflow-hidden shadow-sm">
+                      {p.image_url ? (
+                        <Image src={p.image_url} alt={p.name} width={56} height={56} className="w-14 h-14 object-cover shrink-0" />
+                      ) : (
+                        <div className="w-14 h-14 bg-zinc-100 shrink-0" />
+                      )}
+                      <div className="flex-1 py-2 pr-2 flex flex-col justify-between min-w-0">
+                        <p className="text-[11px] font-semibold text-zinc-900 leading-tight line-clamp-2">{p.name}</p>
+                        <p className="text-[11px] font-bold" style={{ color: primaryColor.hex }}>${Number(p.price).toFixed(2)}</p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                })()}
               </div>
             </div>
           </div>
