@@ -21,6 +21,9 @@ export interface Database {
           phone: string | null
           address: string | null
           created_at: string
+          whatsapp_number: string | null
+          whatsapp_button_type: 'Hacer Pedido' | 'Reservar Mesa' | 'Consultar' | null
+          whatsapp_message: string | null
         }
         Insert: {
           id?: string
@@ -33,6 +36,9 @@ export interface Database {
           phone?: string | null
           address?: string | null
           created_at?: string
+          whatsapp_number?: string | null
+          whatsapp_button_type?: 'Hacer Pedido' | 'Reservar Mesa' | 'Consultar' | null
+          whatsapp_message?: string | null
         }
         Update: {
           id?: string
@@ -45,6 +51,9 @@ export interface Database {
           phone?: string | null
           address?: string | null
           created_at?: string
+          whatsapp_number?: string | null
+          whatsapp_button_type?: 'Hacer Pedido' | 'Reservar Mesa' | 'Consultar' | null
+          whatsapp_message?: string | null
         }
       }
       categories: {

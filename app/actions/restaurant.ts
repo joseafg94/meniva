@@ -49,3 +49,56 @@ export async function updateBannerSettings(formData: FormData) {
 
   return { success: true, message: 'Banner actualizado correctamente' }
 }
+
+export async function updateWhatsAppSettings(formData: FormData) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    throw new Error('No autorizado')
+  }
+
+  const { data: restaurant } = await supabase
+    .from('restaurants')
+    .select('id, slug')
+    .eq('user_id', user.id)
+    .single()
+
+  if (!restaurant) {
+    throw new Error('Restaurante no encontrado')
+  }
+
+  const whatsapp_number = formData.get('whatsapp_number') as string
+  const whatsapp_button_type = formData.get('whatsapp_button_type') as 'Hacer Pedido' | 'Reservar Mesa' | 'Consultar'
+  const whatsapp_message = formData.get('whatsapp_message') as string
+
+  const sanitizedNumber = whatsapp_number ? whatsapp_number.replace(/\D/g, '') : ''
+
+  if (whatsapp_number && !/^\d+$/.test(whatsapp_number)) {
+    return { success: false, message: 'El número de WhatsApp debe contener solo dígitos.' }
+  }
+
+  if (sanitizedNumber && !whatsapp_message) {
+    return { success: false, message: 'El mensaje precargado es obligatorio.' }
+  }
+
+  const { error } = await supabase
+    .from('restaurants')
+    .update({
+      whatsapp_number: sanitizedNumber || null,
+      whatsapp_button_type: sanitizedNumber ? whatsapp_button_type : null,
+      whatsapp_message: sanitizedNumber ? whatsapp_message : null,
+    })
+    .eq('id', restaurant.id)
+
+  if (error) {
+    console.error('Error updating whatsapp settings:', error)
+    return { success: false, message: 'Error al guardar los cambios' }
+  }
+
+  revalidatePath('/dashboard')
+  revalidatePath('/dashboard/whatsapp')
+  revalidatePath(`/menu/${restaurant.slug}`)
+
+  return { success: true, message: 'Configuración de WhatsApp guardada correctamente' }
+}
