@@ -1,16 +1,17 @@
 'use client'
 
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { QRCodeCanvas } from 'qrcode.react'
-import { Download, Copy, Check, ExternalLink, Loader2 } from 'lucide-react'
+import { QRCodeSVG } from 'qrcode.react'
+import { Download, Copy, Check, Loader2, Info } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export default function QRPage() {
   const [slug, setSlug] = useState<string | null>(null)
+  const [logoUrl, setLogoUrl] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const [copied, setCopied] = useState(false)
-  const qrRef = useRef<HTMLDivElement>(null)
+  const qrWrapperRef = useRef<HTMLDivElement>(null)
   const supabase = createClient()
 
   useEffect(() => {
@@ -19,11 +20,14 @@ export default function QRPage() {
       if (user) {
         const { data } = await supabase
           .from('restaurants')
-          .select('slug')
+          .select('slug, logo_url')
           .eq('user_id', user.id)
           .single()
         
-        if (data) setSlug(data.slug)
+        if (data) {
+          setSlug(data.slug)
+          setLogoUrl(data.logo_url ?? null)
+        }
       }
       setLoading(false)
     }
@@ -32,12 +36,22 @@ export default function QRPage() {
 
   const menuUrl = slug ? `https://getmeniva.vercel.app/menu/${slug}` : ''
 
-  const downloadQR = () => {
-    const canvas = qrRef.current?.querySelector('canvas')
-    if (canvas) {
-      const pngUrl = canvas
-        .toDataURL('image/png')
-        .replace('image/png', 'image/octet-stream')
+  const downloadQR = useCallback(() => {
+    const svg = qrWrapperRef.current?.querySelector('svg')
+    if (!svg) return
+
+    const svgData = new XMLSerializer().serializeToString(svg)
+    const canvas = document.createElement('canvas')
+    const size = 400
+    canvas.width = size
+    canvas.height = size
+    const ctx = canvas.getContext('2d')!
+    const img = new window.Image()
+    img.onload = () => {
+      ctx.fillStyle = '#ffffff'
+      ctx.fillRect(0, 0, size, size)
+      ctx.drawImage(img, 0, 0, size, size)
+      const pngUrl = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream')
       const downloadLink = document.createElement('a')
       downloadLink.href = pngUrl
       downloadLink.download = `qr-meniva-${slug}.png`
@@ -45,7 +59,8 @@ export default function QRPage() {
       downloadLink.click()
       document.body.removeChild(downloadLink)
     }
-  }
+    img.src = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgData)))}`
+  }, [slug])
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(menuUrl)
@@ -79,14 +94,29 @@ export default function QRPage() {
       </div>
 
       <div className="bg-white border border-zinc-200 rounded-2xl p-6 sm:p-8 flex flex-col items-center space-y-6 shadow-sm overflow-hidden">
-        <div ref={qrRef} className="p-3 sm:p-4 bg-white rounded-xl border border-zinc-100 shadow-inner">
-          <QRCodeCanvas
+        <div ref={qrWrapperRef} className="p-3 sm:p-4 bg-white rounded-xl border border-zinc-100 shadow-inner">
+          <QRCodeSVG
             value={menuUrl}
-            size={200}
+            size={220}
             level="H"
-            includeMargin={true}
+            imageSettings={logoUrl ? {
+              src: logoUrl,
+              height: 48,
+              width: 48,
+              excavate: true,
+            } : undefined}
+            style={{ width: '100%', height: 'auto' }}
           />
         </div>
+
+        {logoUrl && (
+          <div className="flex items-start gap-2 bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 w-full">
+            <Info size={14} className="text-zinc-400 mt-0.5 shrink-0" />
+            <p className="text-[11px] text-zinc-500 leading-relaxed">
+              El logo aparece en el centro del QR para identificar tu restaurante.
+            </p>
+          </div>
+        )}
 
         <div className="w-full space-y-4">
           <div className="flex items-center gap-2 p-3 bg-zinc-50 border border-zinc-200 rounded-lg overflow-hidden">
@@ -101,24 +131,13 @@ export default function QRPage() {
             </button>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 sm:gap-3">
-            <Button 
-              onClick={downloadQR}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-1.5 px-2 text-xs sm:text-sm"
-            >
-              <Download size={16} className="sm:size-[18px]" />
-              Descargar
-            </Button>
-            <Button 
-              variant="outline"
-              asChild
-              className="flex items-center justify-center gap-1.5 px-2 text-xs sm:text-sm"
-            >
-              <a href={menuUrl} target="_blank" rel="noopener noreferrer">
-                Ver menú
-              </a>
-            </Button>
-          </div>
+          <Button 
+            onClick={downloadQR}
+            className="w-full bg-emerald-600 hover:bg-emerald-700 text-white flex items-center justify-center gap-1.5 text-sm"
+          >
+            <Download size={18} />
+            Descargar QR
+          </Button>
         </div>
       </div>
 

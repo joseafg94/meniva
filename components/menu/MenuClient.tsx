@@ -65,7 +65,6 @@ interface Restaurant {
   google_review_url: string | null;
   is_open: boolean | null;
   footer_address: string | null;
-  footer_phone: string | null;
 }
 
 interface MenuClientProps {
@@ -376,11 +375,9 @@ export function MenuClient({ restaurant, categories, products, isBannerVisible }
       )}
 
       {/* Local info footer */}
-      {(restaurant.footer_address || restaurant.footer_phone) && (
+      {restaurant.footer_address && (
         <div className="text-center text-xs text-zinc-400 py-4 border-t border-zinc-100">
-          {restaurant.footer_address && <span>{restaurant.footer_address}</span>}
-          {restaurant.footer_address && restaurant.footer_phone && <span> · </span>}
-          {restaurant.footer_phone && <span>{restaurant.footer_phone}</span>}
+          <span>{restaurant.footer_address}</span>
         </div>
       )}
 

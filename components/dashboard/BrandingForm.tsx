@@ -55,7 +55,6 @@ interface BrandingFormProps {
     description: string | null
     is_open: boolean | null
     footer_address: string | null
-    footer_phone: string | null
   }
   categories: { id: string; name: string }[]
   products: { id: string; name: string; price: number; image_url: string | null; category_id: string | null }[]
@@ -92,7 +91,6 @@ export function BrandingForm({ initialData, categories, products }: BrandingForm
   const [description, setDescription] = useState(initialData.description ?? '')
   const [isOpen, setIsOpen] = useState<boolean | null>(initialData.is_open ?? null)
   const [footerAddress, setFooterAddress] = useState(initialData.footer_address ?? '')
-  const [footerPhone, setFooterPhone] = useState(initialData.footer_phone ?? '')
   const [logoPreview, setLogoPreview] = useState<string | null>(initialData.logo_url)
   const [coverPreview, setCoverPreview] = useState<string | null>(initialData.cover_url)
   const [logoFile, setLogoFile] = useState<File | null>(null)
@@ -430,21 +428,6 @@ export function BrandingForm({ initialData, categories, products }: BrandingForm
               </span>
             </div>
           </div>
-          {/* Teléfono */}
-          <div>
-            <label htmlFor="footer_phone" className="text-sm font-medium text-zinc-800 mb-1 block">
-              Teléfono del local
-            </label>
-            <input
-              id="footer_phone"
-              name="footer_phone"
-              type="tel"
-              value={footerPhone}
-              onChange={(e) => setFooterPhone(e.target.value)}
-              placeholder="Ej: +507 6677-8899"
-              className="w-full border border-zinc-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
-            />
-          </div>
         </div>
 
         {/* Feedback */}
@@ -470,15 +453,23 @@ export function BrandingForm({ initialData, categories, products }: BrandingForm
       <div className="lg:sticky lg:top-6 h-fit">
         <div className="bg-white border border-zinc-200 rounded-xl p-4 md:p-6">
           <h2 className="text-sm font-semibold text-zinc-900 mb-4">Vista previa del menú</h2>
-          <div className="relative mx-auto w-[280px] h-[560px] bg-zinc-900 rounded-[40px] p-3 shadow-2xl ring-1 ring-zinc-700">
-            {/* Notch */}
-            <div className="absolute top-3 left-1/2 -translate-x-1/2 w-20 h-5 bg-zinc-900 rounded-full z-10" />
-            
-            {/* Screen */}
-            <div 
-              className="w-full h-full rounded-[32px] overflow-hidden text-left transition-all relative bg-white"
-              style={{ backgroundColor: secondaryColor.hex, fontFamily: fontOption.family }}
-            >
+          {/* Frame móvil neutro */}
+          <div className="relative mx-auto w-[280px] h-[560px] bg-zinc-800 rounded-[20px] p-[3px] shadow-2xl">
+            {/* Pantalla */}
+            <div className="w-full h-full rounded-[18px] overflow-hidden bg-white flex flex-col">
+              {/* Barra de estado simple */}
+              <div className="h-6 bg-zinc-900 flex items-center justify-between px-4 shrink-0">
+                <span className="text-white text-[9px]">9:41</span>
+                <div className="flex gap-1">
+                  <div className="w-3 h-1.5 bg-white rounded-sm opacity-80" />
+                  <div className="w-1 h-1.5 bg-white rounded-sm opacity-60" />
+                </div>
+              </div>
+              {/* Contenido del menú */}
+              <div
+                className="flex-1 overflow-hidden text-left relative"
+                style={{ backgroundColor: secondaryColor.hex, fontFamily: fontOption.family }}
+              >
               {/* Cover */}
               {coverPreview && (
                 <div className="h-20 w-full overflow-hidden relative">
@@ -510,38 +501,39 @@ export function BrandingForm({ initialData, categories, products }: BrandingForm
                 ))}
               </div>
               {/* Products */}
-              <div className="p-3 space-y-2">
+              <div className="p-3 space-y-2 overflow-hidden">
                 {(() => {
+                  const PLACEHOLDERS = [
+                    { id: 'ph1', name: 'Café Americano', price: 2.50, image_url: null },
+                    { id: 'ph2', name: 'Croissant', price: 3.00, image_url: null },
+                    { id: 'ph3', name: 'Jugo Natural', price: 2.75, image_url: null },
+                    { id: 'ph4', name: 'Tostadas con Mantequilla', price: 1.50, image_url: null },
+                  ]
                   const firstCat = categories[0]
-                  const previewProducts = firstCat
-                    ? products.filter(p => p.category_id === firstCat.id).slice(0, 3)
-                    : products.slice(0, 3)
-                  if (previewProducts.length === 0) {
-                    // fallback placeholder
-                    return [{ id: '1', name: 'Pasta Carbonara', price: 8.50, image_url: null }, { id: '2', name: 'Ensalada César', price: 12.00, image_url: null }].map((p) => (
-                      <div key={p.id} className="flex gap-2 bg-white rounded-lg border border-zinc-100 overflow-hidden shadow-sm">
-                        <div className="w-14 h-14 bg-zinc-100 shrink-0" />
-                        <div className="flex-1 py-2 pr-2 flex flex-col justify-between min-w-0">
-                          <p className="text-[11px] font-semibold text-zinc-900 leading-tight">{p.name}</p>
-                          <p className="text-[11px] font-bold" style={{ color: primaryColor.hex }}>${p.price.toFixed(2)}</p>
-                        </div>
-                      </div>
-                    ))
-                  }
-                  return previewProducts.map((p) => (
+                  const realProducts = (firstCat
+                    ? products.filter(p => p.category_id === firstCat.id)
+                    : products
+                  ).slice(0, 4)
+                  const needed = 4 - realProducts.length
+                  const displayProducts = [
+                    ...realProducts,
+                    ...PLACEHOLDERS.slice(0, needed),
+                  ]
+                  return displayProducts.map((p) => (
                     <div key={p.id} className="flex gap-2 bg-white rounded-lg border border-zinc-100 overflow-hidden shadow-sm">
-                      {p.image_url ? (
-                        <Image src={p.image_url} alt={p.name} width={56} height={56} className="w-14 h-14 object-cover shrink-0" />
+                      {'image_url' in p && p.image_url ? (
+                        <Image src={p.image_url} alt={p.name} width={48} height={48} className="w-12 h-12 object-cover shrink-0" />
                       ) : (
-                        <div className="w-14 h-14 bg-zinc-100 shrink-0" />
+                        <div className="w-12 h-12 bg-zinc-100 shrink-0" />
                       )}
-                      <div className="flex-1 py-2 pr-2 flex flex-col justify-between min-w-0">
-                        <p className="text-[11px] font-semibold text-zinc-900 leading-tight line-clamp-2">{p.name}</p>
-                        <p className="text-[11px] font-bold" style={{ color: primaryColor.hex }}>${Number(p.price).toFixed(2)}</p>
+                      <div className="flex-1 py-1.5 pr-2 flex flex-col justify-between min-w-0">
+                        <p className="text-[10px] font-semibold text-zinc-900 leading-tight line-clamp-2">{p.name}</p>
+                        <p className="text-[10px] font-bold" style={{ color: primaryColor.hex }}>${Number(p.price).toFixed(2)}</p>
                       </div>
                     </div>
                   ))
                 })()}
+              </div>
               </div>
             </div>
           </div>
