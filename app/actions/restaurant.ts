@@ -102,3 +102,46 @@ export async function updateWhatsAppSettings(formData: FormData) {
 
   return { success: true, message: 'Configuración de WhatsApp guardada correctamente' }
 }
+
+export async function saveGoogleReviewSettings(formData: FormData) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  if (!user) {
+    throw new Error('No autorizado')
+  }
+
+  const { data: restaurant } = await supabase
+    .from('restaurants')
+    .select('id, slug')
+    .eq('user_id', user.id)
+    .single()
+
+  if (!restaurant) {
+    throw new Error('Restaurante no encontrado')
+  }
+
+  const google_review_url = formData.get('google_review_url') as string
+
+  if (google_review_url && !google_review_url.startsWith('http://') && !google_review_url.startsWith('https://')) {
+    return { success: false, message: 'La URL debe comenzar con http:// o https://' }
+  }
+
+  const { error } = await supabase
+    .from('restaurants')
+    .update({
+      google_review_url: google_review_url || null,
+    })
+    .eq('id', restaurant.id)
+
+  if (error) {
+    console.error('Error updating google review settings:', error)
+    return { success: false, message: 'Error al guardar los cambios' }
+  }
+
+  revalidatePath('/dashboard')
+  revalidatePath('/dashboard/reviews')
+  revalidatePath(`/menu/${restaurant.slug}`)
+
+  return { success: true, message: 'Configuración de reseñas de Google guardada correctamente' }
+}

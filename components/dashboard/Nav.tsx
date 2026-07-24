@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
-import { Package, FolderTree, QrCode, Megaphone, Palette, MessageCircle, Wallet } from 'lucide-react'
+import { Package, FolderTree, QrCode, Megaphone, Palette, MessageCircle, Wallet, Star } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navItems = [
@@ -13,6 +13,7 @@ const navItems = [
   { name: 'Banner', href: '/dashboard/banner', icon: Megaphone },
   { name: 'WhatsApp', href: '/dashboard/whatsapp', icon: MessageCircle },
   { name: 'Yappy', href: '/dashboard/yappy', icon: Wallet },
+  { name: 'Reseñas', href: '/dashboard/reviews', icon: Star },
   { name: 'Mi QR', href: '/dashboard/qr', icon: QrCode },
 ]
 

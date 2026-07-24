@@ -26,6 +26,7 @@ export interface Database {
           whatsapp_message: string | null
           yappy_qr_url: string | null
           yappy_active: boolean
+          google_review_url: string | null
         }
         Insert: {
           id?: string
@@ -43,6 +44,7 @@ export interface Database {
           whatsapp_message?: string | null
           yappy_qr_url?: string | null
           yappy_active?: boolean
+          google_review_url?: string | null
         }
         Update: {
           id?: string
@@ -60,6 +62,7 @@ export interface Database {
           whatsapp_message?: string | null
           yappy_qr_url?: string | null
           yappy_active?: boolean
+          google_review_url?: string | null
         }
       }
       categories: {

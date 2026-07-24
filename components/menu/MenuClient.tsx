@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { X, Wallet } from 'lucide-react';
+import { X, Wallet, Star } from 'lucide-react';
 import { uiTranslations } from '@/lib/translate';
 import { CategoryNav } from '@/components/menu/CategoryNav';
 import { MenuProductCard } from '@/components/menu/MenuProductCard';
@@ -45,6 +45,7 @@ interface Restaurant {
   whatsapp_message: string | null;
   yappy_qr_url: string | null;
   yappy_active: boolean;
+  google_review_url: string | null;
 }
 
 interface MenuClientProps {
@@ -57,6 +58,28 @@ interface MenuClientProps {
 export function MenuClient({ restaurant, categories, products, isBannerVisible }: MenuClientProps) {
   const [yappyModalOpen, setYappyModalOpen] = useState(false);
   const showYappy = !!(restaurant.yappy_active && restaurant.yappy_qr_url);
+  const [selectedRating, setSelectedRating] = useState<number | null>(null);
+  const [hoveredRating, setHoveredRating] = useState<number | null>(null);
+  const [submittedFeedback, setSubmittedFeedback] = useState(false);
+  const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
+
+  const handleRating = (rating: number) => {
+    setSelectedRating(rating);
+    setSubmittedFeedback(true);
+
+    if (rating >= 4) {
+      if (restaurant.google_review_url) {
+        window.open(restaurant.google_review_url, '_blank');
+      }
+    } else {
+      if (restaurant.whatsapp_number) {
+        const text = `Hola, tuve una experiencia en ${restaurant.name} y me gustaría compartir mi opinión.`;
+        window.open(`https://wa.me/${restaurant.whatsapp_number}?text=${encodeURIComponent(text)}`, '_blank');
+      } else {
+        setFeedbackMessage('Gracias por tu feedback, lo tomaremos en cuenta.');
+      }
+    }
+  };
   // Group products by category using original products
   const productsByCategory = (categories ?? []).map((cat) => ({
     ...cat,
@@ -177,6 +200,42 @@ export function MenuClient({ restaurant, categories, products, isBannerVisible }
         )}
       </div>
 
+      {/* Google Review Filter Widget */}
+      {restaurant.google_review_url && (
+        <div className="max-w-2xl mx-auto px-4 py-8 text-center border-t border-zinc-100 mt-8 mb-4">
+          {!submittedFeedback ? (
+            <div className="space-y-3">
+              <h3 className="text-sm font-semibold text-zinc-800">¿Qué tal tu experiencia hoy?</h3>
+              <div className="flex justify-center gap-1.5">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    onClick={() => handleRating(star)}
+                    onMouseEnter={() => setHoveredRating(star)}
+                    onMouseLeave={() => setHoveredRating(null)}
+                    className="p-1 transition-transform active:scale-95"
+                    aria-label={`Calificar con ${star} estrellas`}
+                  >
+                    <Star
+                      size={28}
+                      className={`transition-colors ${
+                        star <= (hoveredRating ?? selectedRating ?? 0)
+                          ? 'text-amber-400 fill-amber-400'
+                          : 'text-zinc-300'
+                      }`}
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="text-zinc-600 text-sm font-medium animate-fade-in">
+              {feedbackMessage || '¡Gracias por tu opinión!'}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Footer */}
       <div className="text-center py-6 pb-safe">

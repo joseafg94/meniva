@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Package, FolderTree, QrCode, Palette, Megaphone, MessageCircle, Wallet } from 'lucide-react'
+import { Package, FolderTree, QrCode, Palette, Megaphone, MessageCircle, Wallet, Star } from 'lucide-react'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -78,6 +78,14 @@ export default async function DashboardPage() {
       icon: Wallet,
       color: 'text-violet-500',
       bg: 'bg-violet-50',
+    },
+    {
+      title: 'Reseñas',
+      description: 'Configura la redirección inteligente de opiniones.',
+      href: '/dashboard/reviews',
+      icon: Star,
+      color: 'text-amber-500',
+      bg: 'bg-amber-50',
     },
   ]
 
