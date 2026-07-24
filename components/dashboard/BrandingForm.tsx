@@ -91,6 +91,7 @@ export function BrandingForm({ initialData, categories, products }: BrandingForm
   const [description, setDescription] = useState(initialData.description ?? '')
   const [isOpen, setIsOpen] = useState<boolean | null>(initialData.is_open ?? null)
   const [footerAddress, setFooterAddress] = useState(initialData.footer_address ?? '')
+  const [selectedCatId, setSelectedCatId] = useState<string | null>(categories[0]?.id ?? null)
   const [logoPreview, setLogoPreview] = useState<string | null>(initialData.logo_url)
   const [coverPreview, setCoverPreview] = useState<string | null>(initialData.cover_url)
   const [logoFile, setLogoFile] = useState<File | null>(null)
@@ -489,16 +490,21 @@ export function BrandingForm({ initialData, categories, products }: BrandingForm
                 </div>
               </div>
               {/* Category tabs */}
-              <div className="bg-white border-b border-zinc-100 px-3 py-2 flex gap-1.5 overflow-x-hidden">
-                {(categories.length > 0 ? categories.slice(0, 4) : [{ id: 'a', name: 'Entradas' }, { id: 'b', name: 'Principales' }]).map((cat, i) => (
-                  <span
-                    key={cat.id}
-                    className="px-2.5 py-1 rounded-full text-[10px] font-medium whitespace-nowrap"
-                    style={i === 0 ? { backgroundColor: primaryColor.hex, color: '#ffffff' } : { color: '#71717a' }}
-                  >
-                    {cat.name}
-                  </span>
-                ))}
+              <div className="bg-white border-b border-zinc-100 px-3 py-2 flex gap-1.5 overflow-x-auto scrollbar-none">
+                {(categories.length > 0 ? categories.slice(0, 4) : [{ id: 'a', name: 'Entradas' }, { id: 'b', name: 'Principales' }]).map((cat) => {
+                  const isActive = (selectedCatId ?? categories[0]?.id) === cat.id
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => setSelectedCatId(cat.id)}
+                      className="px-2.5 py-1 rounded-full text-[10px] font-medium whitespace-nowrap transition-colors"
+                      style={isActive ? { backgroundColor: primaryColor.hex, color: '#ffffff' } : { color: '#71717a' }}
+                    >
+                      {cat.name}
+                    </button>
+                  )
+                })}
               </div>
               {/* Products */}
               <div className="p-3 space-y-2 overflow-hidden">
@@ -509,14 +515,18 @@ export function BrandingForm({ initialData, categories, products }: BrandingForm
                     { id: 'ph3', name: 'Jugo Natural', price: 2.75, image_url: null },
                     { id: 'ph4', name: 'Tostadas con Mantequilla', price: 1.50, image_url: null },
                   ]
-                  const firstCat = categories[0]
-                  const realProducts = (firstCat
-                    ? products.filter(p => p.category_id === firstCat.id)
+                  const activeCatId = selectedCatId ?? categories[0]?.id
+                  const catProducts = activeCatId
+                    ? products.filter(p => p.category_id === activeCatId)
                     : products
-                  ).slice(0, 4)
-                  const needed = 4 - realProducts.length
+                  const otherProducts = activeCatId
+                    ? products.filter(p => p.category_id !== activeCatId)
+                    : []
+                  
+                  const allReal = [...catProducts, ...otherProducts].slice(0, 4)
+                  const needed = 4 - allReal.length
                   const displayProducts = [
-                    ...realProducts,
+                    ...allReal,
                     ...PLACEHOLDERS.slice(0, needed),
                   ]
                   return displayProducts.map((p) => (
