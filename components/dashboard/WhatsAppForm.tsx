@@ -119,21 +119,6 @@ export function WhatsAppForm({ initialData }: WhatsAppFormProps) {
             <p className="text-[10px] text-zinc-400">Selecciona el código de tu país e ingresa tu número local sin guiones ni espacios. Déjalo en blanco para ocultar el botón.</p>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="whatsapp_button_type">Tipo de Botón</Label>
-            <select
-              id="whatsapp_button_type"
-              name="whatsapp_button_type"
-              className="flex h-8 w-full items-center rounded-lg border border-input bg-background px-2.5 py-1 text-sm transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50"
-              value={whatsappButtonType}
-              onChange={(e) => setWhatsappButtonType(e.target.value as 'Hacer Pedido' | 'Reservar Mesa' | 'Consultar')}
-            >
-              <option value="Hacer Pedido">Hacer Pedido</option>
-              <option value="Reservar Mesa">Reservar Mesa</option>
-              <option value="Consultar">Consultar</option>
-            </select>
-            <p className="text-[10px] text-zinc-400">Selecciona el texto que se mostrará en el botón flotante.</p>
-          </div>
 
           <div className="col-span-1 md:col-span-2 space-y-2">
             <Label htmlFor="whatsapp_message">Mensaje Precargado</Label>
