@@ -21,7 +21,7 @@ export async function joinVipClub(formData: FormData) {
 
   const supabase = await createClient()
 
-  const { data: existing } = await supabase
+  const { data: existing, error: selectError } = await supabase
     .from('customers')
     .select('id')
     .eq('restaurant_id', restaurant_id)
@@ -29,11 +29,16 @@ export async function joinVipClub(formData: FormData) {
     .eq('phone', phone)
     .maybeSingle()
 
+  if (selectError) {
+    console.error('Error checking existing customer:', selectError)
+    return { success: false, message: `Error DB: ${selectError.message}` }
+  }
+
   if (existing) {
     return { success: false, message: 'Este número ya forma parte del Club VIP.' }
   }
 
-  const { error } = await supabase.from('customers').insert({
+  const { error: insertError } = await supabase.from('customers').insert({
     restaurant_id,
     name,
     country_code,
@@ -43,9 +48,9 @@ export async function joinVipClub(formData: FormData) {
     consent_timestamp: new Date().toISOString(),
   })
 
-  if (error) {
-    console.error('Error joining VIP club:', error)
-    return { success: false, message: 'No se pudo completar el registro. Inténtalo de nuevo.' }
+  if (insertError) {
+    console.error('Error joining VIP club:', insertError)
+    return { success: false, message: `Error DB: ${insertError.message}` }
   }
 
   revalidatePath('/dashboard/customers')
