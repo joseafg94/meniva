@@ -24,6 +24,8 @@ export interface Database {
           whatsapp_number: string | null
           whatsapp_button_type: 'Hacer Pedido' | 'Reservar Mesa' | 'Consultar' | null
           whatsapp_message: string | null
+          yappy_qr_url: string | null
+          yappy_active: boolean
         }
         Insert: {
           id?: string
@@ -39,6 +41,8 @@ export interface Database {
           whatsapp_number?: string | null
           whatsapp_button_type?: 'Hacer Pedido' | 'Reservar Mesa' | 'Consultar' | null
           whatsapp_message?: string | null
+          yappy_qr_url?: string | null
+          yappy_active?: boolean
         }
         Update: {
           id?: string
@@ -54,6 +58,8 @@ export interface Database {
           whatsapp_number?: string | null
           whatsapp_button_type?: 'Hacer Pedido' | 'Reservar Mesa' | 'Consultar' | null
           whatsapp_message?: string | null
+          yappy_qr_url?: string | null
+          yappy_active?: boolean
         }
       }
       categories: {

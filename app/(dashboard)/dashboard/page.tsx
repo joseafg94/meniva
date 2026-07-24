@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Package, FolderTree, QrCode, Palette, Megaphone, MessageCircle } from 'lucide-react'
+import { Package, FolderTree, QrCode, Palette, Megaphone, MessageCircle, Wallet } from 'lucide-react'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -70,6 +70,14 @@ export default async function DashboardPage() {
       icon: MessageCircle,
       color: 'text-emerald-500',
       bg: 'bg-emerald-50',
+    },
+    {
+      title: 'Yappy',
+      description: 'Muestra tu QR de pago Yappy en el menú.',
+      href: '/dashboard/yappy',
+      icon: Wallet,
+      color: 'text-violet-500',
+      bg: 'bg-violet-50',
     },
   ]
 

@@ -1,6 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
+import Image from 'next/image';
+import { X, Wallet } from 'lucide-react';
 import { uiTranslations } from '@/lib/translate';
 import { CategoryNav } from '@/components/menu/CategoryNav';
 import { MenuProductCard } from '@/components/menu/MenuProductCard';
@@ -41,6 +43,8 @@ interface Restaurant {
   whatsapp_number: string | null;
   whatsapp_button_type: string | null;
   whatsapp_message: string | null;
+  yappy_qr_url: string | null;
+  yappy_active: boolean;
 }
 
 interface MenuClientProps {
@@ -51,6 +55,8 @@ interface MenuClientProps {
 }
 
 export function MenuClient({ restaurant, categories, products, isBannerVisible }: MenuClientProps) {
+  const [yappyModalOpen, setYappyModalOpen] = useState(false);
+  const showYappy = !!(restaurant.yappy_active && restaurant.yappy_qr_url);
   // Group products by category using original products
   const productsByCategory = (categories ?? []).map((cat) => ({
     ...cat,
@@ -178,6 +184,50 @@ export function MenuClient({ restaurant, categories, products, isBannerVisible }
           {uiTranslations.createdWith} <span className="text-emerald-500 font-medium">Meniva</span>
         </p>
       </div>
+
+      {/* Yappy Floating Button */}
+      {showYappy && (
+        <button
+          onClick={() => setYappyModalOpen(true)}
+          className={`fixed z-50 w-14 h-14 rounded-full shadow-xl flex items-center justify-center transition-transform hover:scale-110 ${restaurant.whatsapp_number ? 'bottom-24 right-6' : 'bottom-6 right-6'}`}
+          style={{ backgroundColor: '#6D28D9' }}
+          aria-label="Pagar con Yappy"
+        >
+          <Wallet size={26} color="white" strokeWidth={1.8} />
+        </button>
+      )}
+
+      {/* Yappy Modal */}
+      {showYappy && yappyModalOpen && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 px-4"
+          onClick={() => setYappyModalOpen(false)}
+        >
+          <div
+            className="bg-white rounded-2xl p-6 w-full max-w-xs shadow-2xl flex flex-col items-center gap-4 relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setYappyModalOpen(false)}
+              className="absolute top-3 right-3 p-1.5 rounded-full hover:bg-zinc-100 transition-colors text-zinc-500"
+              aria-label="Cerrar"
+            >
+              <X size={18} />
+            </button>
+            <h2 className="text-lg font-bold text-zinc-900">Pagar con Yappy</h2>
+            <p className="text-sm text-zinc-500 text-center">Escanea el código QR con tu app de Yappy para realizar tu pago.</p>
+            <div className="w-56 h-56 relative rounded-xl overflow-hidden border border-zinc-100 bg-zinc-50">
+              <Image
+                src={restaurant.yappy_qr_url!}
+                alt="QR de Yappy"
+                fill
+                className="object-contain p-2"
+                sizes="224px"
+              />
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* WhatsApp Floating Button */}
       {restaurant.whatsapp_number && (
