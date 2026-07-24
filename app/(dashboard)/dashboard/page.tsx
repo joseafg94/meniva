@@ -37,7 +37,7 @@ const groups = [
   {
     label: 'Clientes',
     items: [
-      { title: 'Club VIP', description: 'Próximamente', href: '#', icon: Users },
+      { title: 'Club VIP', description: 'Captura y lista de clientes', href: '/dashboard/customers', icon: Users },
       { title: 'Reseñas', description: 'Filtro inteligente de opiniones', href: '/dashboard/reviews', icon: Star },
     ],
   },
@@ -58,14 +58,12 @@ export default async function DashboardPage() {
     .single()
 
   const name = restaurant?.name || 'tu restaurante'
-  const hour = new Date().getHours()
-  const greeting = hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches'
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-zinc-900">{greeting}, {name} 👋</h1>
-        <p className="text-sm text-zinc-500 mt-0.5">Gestiona tu menú desde aquí.</p>
+        <h1 className="text-xl font-bold text-zinc-900">{name}</h1>
+        <p className="text-sm text-zinc-500 mt-0.5">Panel de Administración</p>
       </div>
 
       <div className="space-y-5">

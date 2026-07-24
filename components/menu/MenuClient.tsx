@@ -7,6 +7,23 @@ import { uiTranslations } from '@/lib/translate';
 import { CategoryNav } from '@/components/menu/CategoryNav';
 import { MenuProductCard } from '@/components/menu/MenuProductCard';
 import { PromoBanner } from '@/components/menu/PromoBanner';
+import { joinVipClub } from '@/app/actions/customers';
+
+const COUNTRY_CODES = [
+  { code: '+507', flag: '🇵🇦', name: 'Panamá' },
+  { code: '+1', flag: '🇺🇸', name: 'USA / Canadá' },
+  { code: '+52', flag: '🇲🇽', name: 'México' },
+  { code: '+503', flag: '🇸🇻', name: 'El Salvador' },
+  { code: '+502', flag: '🇬🇹', name: 'Guatemala' },
+  { code: '+504', flag: '🇭🇳', name: 'Honduras' },
+  { code: '+505', flag: '🇳🇮', name: 'Nicaragua' },
+  { code: '+506', flag: '🇨🇷', name: 'Costa Rica' },
+  { code: '+57', flag: '🇨🇴', name: 'Colombia' },
+  { code: '+58', flag: '🇻🇪', name: 'Venezuela' },
+  { code: '+51', flag: '🇵🇪', name: 'Perú' },
+  { code: '+593', flag: '🇪🇨', name: 'Ecuador' },
+  { code: '+34', flag: '🇪🇸', name: 'España' },
+];
 
 interface Category {
   id: string;
@@ -62,6 +79,39 @@ export function MenuClient({ restaurant, categories, products, isBannerVisible }
   const [hoveredRating, setHoveredRating] = useState<number | null>(null);
   const [submittedFeedback, setSubmittedFeedback] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
+
+  const [vipName, setVipName] = useState('');
+  const [vipCountryCode, setVipCountryCode] = useState('+507');
+  const [vipPhone, setVipPhone] = useState('');
+  const [vipSubmitting, setVipSubmitting] = useState(false);
+  const [vipSubmitted, setVipSubmitted] = useState(false);
+  const [vipError, setVipError] = useState<string | null>(null);
+
+  const handleVipSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setVipError(null);
+    const cleanPhone = vipPhone.replace(/\D/g, '');
+    if (!cleanPhone || cleanPhone.length < 7 || cleanPhone.length > 15) {
+      setVipError('El número de teléfono debe tener entre 7 y 15 dígitos.');
+      return;
+    }
+
+    setVipSubmitting(true);
+    const formData = new FormData();
+    formData.append('restaurant_id', restaurant.id);
+    if (vipName) formData.append('name', vipName);
+    formData.append('country_code', vipCountryCode);
+    formData.append('phone', cleanPhone);
+
+    const res = await joinVipClub(formData);
+    setVipSubmitting(false);
+
+    if (res.success) {
+      setVipSubmitted(true);
+    } else {
+      setVipError(res.message || 'No se pudo completar el registro.');
+    }
+  };
 
   const handleRating = (rating: number) => {
     setSelectedRating(rating);
@@ -199,6 +249,77 @@ export function MenuClient({ restaurant, categories, products, isBannerVisible }
           </div>
         )}
       </div>
+
+      {/* Club VIP Opt-In Widget */}
+      {restaurant.whatsapp_number && (
+        <div className="max-w-2xl mx-auto px-4 mt-8">
+          <div className="bg-zinc-50 border border-zinc-200/80 rounded-2xl p-5 md:p-6 shadow-sm text-left">
+            {!vipSubmitted ? (
+              <form onSubmit={handleVipSubmit} className="space-y-4">
+                <div className="text-center space-y-1 mb-2">
+                  <h3 className="text-base font-bold text-zinc-900">¿Quieres ofertas exclusivas?</h3>
+                  <p className="text-xs text-zinc-500">Únete al Club VIP de {restaurant.name}</p>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-zinc-700 mb-1">Nombre (opcional)</label>
+                  <input
+                    type="text"
+                    value={vipName}
+                    onChange={(e) => setVipName(e.target.value)}
+                    placeholder="Tu nombre"
+                    className="w-full text-sm bg-white border border-zinc-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-zinc-700 mb-1">WhatsApp</label>
+                  <div className="flex gap-2">
+                    <select
+                      value={vipCountryCode}
+                      onChange={(e) => setVipCountryCode(e.target.value)}
+                      className="text-xs bg-white border border-zinc-200 rounded-xl px-2 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all shrink-0"
+                    >
+                      {COUNTRY_CODES.map((c) => (
+                        <option key={c.code} value={c.code}>
+                          {c.flag} {c.code}
+                        </option>
+                      ))}
+                    </select>
+                    <input
+                      type="tel"
+                      value={vipPhone}
+                      onChange={(e) => setVipPhone(e.target.value)}
+                      placeholder="66778899"
+                      required
+                      className="w-full text-sm bg-white border border-zinc-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
+                    />
+                  </div>
+                </div>
+
+                <p className="text-[11px] text-zinc-400 leading-tight">
+                  Al registrarte aceptas recibir promociones de {restaurant.name} por WhatsApp. Puedes darte de baja cuando quieras.
+                </p>
+
+                {vipError && <p className="text-xs text-rose-500">{vipError}</p>}
+
+                <button
+                  type="submit"
+                  disabled={vipSubmitting}
+                  className="w-full bg-zinc-900 hover:bg-zinc-800 text-white font-medium text-sm py-2.5 rounded-xl transition-all disabled:opacity-50"
+                >
+                  {vipSubmitting ? 'Registrando...' : 'Unirme al Club VIP'}
+                </button>
+              </form>
+            ) : (
+              <div className="text-center py-4 space-y-1">
+                <p className="text-base font-bold text-zinc-900">¡Bienvenido al Club VIP! 🎉</p>
+                <p className="text-xs text-zinc-500">Pronto recibirás nuestras ofertas y novedades por WhatsApp.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Google Review Filter Widget */}
       {restaurant.google_review_url && (

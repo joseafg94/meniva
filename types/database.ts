@@ -126,6 +126,38 @@ export interface Database {
           created_at?: string
         }
       }
+      customers: {
+        Row: {
+          id: string
+          restaurant_id: string
+          name: string | null
+          country_code: string
+          phone: string
+          consent_given: boolean
+          consent_timestamp: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          restaurant_id: string
+          name?: string | null
+          country_code: string
+          phone: string
+          consent_given?: boolean
+          consent_timestamp?: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          restaurant_id?: string
+          name?: string | null
+          country_code?: string
+          phone?: string
+          consent_given?: boolean
+          consent_timestamp?: string
+          created_at?: string
+        }
+      }
     }
   }
 }
