@@ -1,12 +1,47 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import Link from 'next/link'
-import { Package, FolderTree, QrCode, Palette, Megaphone, MessageCircle, Wallet, Star } from 'lucide-react'
+import {
+  Package, FolderTree, Palette, Megaphone,
+  Wallet, MessageCircle, QrCode, Star, Users, ChevronRight
+} from 'lucide-react'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Dashboard - Meniva',
 }
+
+const groups = [
+  {
+    label: 'Gestión del Menú',
+    items: [
+      { title: 'Productos', description: 'Gestiona platos y bebidas', href: '/dashboard/products', icon: Package },
+      { title: 'Categorías', description: 'Organiza tu menú por secciones', href: '/dashboard/categories', icon: FolderTree },
+    ],
+  },
+  {
+    label: 'Personalización',
+    items: [
+      { title: 'Branding', description: 'Colores, fuentes y logo', href: '/dashboard/branding', icon: Palette },
+      { title: 'Banner', description: 'Promociones y avisos', href: '/dashboard/banner', icon: Megaphone },
+    ],
+  },
+  {
+    label: 'Cobro y Promoción',
+    items: [
+      { title: 'Yappy', description: 'Recibe pagos con tu QR', href: '/dashboard/yappy', icon: Wallet },
+      { title: 'WhatsApp', description: 'Botón de contacto directo', href: '/dashboard/whatsapp', icon: MessageCircle },
+      { title: 'Mi QR', description: 'Descarga y comparte tu código QR', href: '/dashboard/qr', icon: QrCode },
+    ],
+  },
+  {
+    label: 'Clientes',
+    items: [
+      { title: 'Club VIP', description: 'Próximamente', href: '#', icon: Users },
+      { title: 'Reseñas', description: 'Filtro inteligente de opiniones', href: '/dashboard/reviews', icon: Star },
+    ],
+  },
+]
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -18,99 +53,63 @@ export default async function DashboardPage() {
 
   const { data: restaurant } = await supabase
     .from('restaurants')
-    .select('name, banner_active, banner_text, banner_color, banner_emoji, banner_expires_at')
+    .select('name')
     .eq('user_id', user.id)
     .single()
 
-  const navCards = [
-    {
-      title: 'Productos',
-      description: 'Gestiona los platos y bebidas de tu menú.',
-      href: '/dashboard/products',
-      icon: Package,
-      color: 'text-blue-500',
-      bg: 'bg-blue-50',
-    },
-    {
-      title: 'Categorías',
-      description: 'Organiza tu menú por secciones (Entradas, Platos Fuertes, etc.)',
-      href: '/dashboard/categories',
-      icon: FolderTree,
-      color: 'text-emerald-500',
-      bg: 'bg-emerald-50',
-    },
-    {
-      title: 'Mi QR',
-      description: 'Ver y descargar el código QR de tu restaurante.',
-      href: '/dashboard/qr',
-      icon: QrCode,
-      color: 'text-purple-500',
-      bg: 'bg-purple-50',
-    },
-    {
-      title: 'Branding',
-      description: 'Personaliza colores, fuentes y logo de tu menú.',
-      href: '/dashboard/branding',
-      icon: Palette,
-      color: 'text-pink-500',
-      bg: 'bg-pink-50',
-    },
-    {
-      title: 'Banner',
-      description: 'Muestra promociones y avisos en tu menú.',
-      href: '/dashboard/banner',
-      icon: Megaphone,
-      color: 'text-amber-500',
-      bg: 'bg-amber-50',
-    },
-    {
-      title: 'WhatsApp',
-      description: 'Configura el botón de contacto de tu menú',
-      href: '/dashboard/whatsapp',
-      icon: MessageCircle,
-      color: 'text-emerald-500',
-      bg: 'bg-emerald-50',
-    },
-    {
-      title: 'Yappy',
-      description: 'Muestra tu QR de pago Yappy en el menú.',
-      href: '/dashboard/yappy',
-      icon: Wallet,
-      color: 'text-violet-500',
-      bg: 'bg-violet-50',
-    },
-    {
-      title: 'Reseñas',
-      description: 'Configura la redirección inteligente de opiniones.',
-      href: '/dashboard/reviews',
-      icon: Star,
-      color: 'text-amber-500',
-      bg: 'bg-amber-50',
-    },
-  ]
+  const name = restaurant?.name || 'tu restaurante'
+  const hour = new Date().getHours()
+  const greeting = hour < 12 ? 'Buenos días' : hour < 19 ? 'Buenas tardes' : 'Buenas noches'
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-emerald-600">{restaurant?.name || 'tu restaurante'}</h1>
-        <p className="text-zinc-500">
-          Panel de administración
-        </p>
+        <h1 className="text-xl font-bold text-zinc-900">{greeting}, {name} 👋</h1>
+        <p className="text-sm text-zinc-500 mt-0.5">Gestiona tu menú desde aquí.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {navCards.map((card) => (
-          <Link
-            key={card.href}
-            href={card.href}
-            className="group bg-white border border-zinc-200 rounded-xl p-6 hover:border-emerald-500/50 hover:shadow-sm transition-all"
-          >
-            <div className={`w-12 h-12 ${card.bg} ${card.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-              <card.icon size={24} />
+      <div className="space-y-5">
+        {groups.map((group) => (
+          <div key={group.label}>
+            <p className="text-xs text-zinc-400 uppercase tracking-wider font-semibold px-1 mb-1.5">
+              {group.label}
+            </p>
+            <div className="bg-white rounded-xl border border-zinc-200 overflow-hidden">
+              {group.items.map((item, idx) => {
+                const isDisabled = item.href === '#'
+                return isDisabled ? (
+                  <div
+                    key={item.href + idx}
+                    className="flex items-center gap-4 px-4 py-4 border-b border-zinc-100 last:border-b-0 opacity-50 cursor-not-allowed"
+                  >
+                    <div className="w-9 h-9 rounded-lg bg-zinc-100 flex items-center justify-center flex-shrink-0">
+                      <item.icon size={18} className="text-zinc-400" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-zinc-900">{item.title}</p>
+                      <p className="text-xs text-zinc-400 truncate">{item.description}</p>
+                    </div>
+                    <ChevronRight size={16} className="text-zinc-300 flex-shrink-0" />
+                  </div>
+                ) : (
+                  <Link
+                    key={item.href + idx}
+                    href={item.href}
+                    className="flex items-center gap-4 px-4 py-4 border-b border-zinc-100 last:border-b-0 hover:bg-zinc-50 transition-colors group"
+                  >
+                    <div className="w-9 h-9 rounded-lg bg-zinc-100 group-hover:bg-zinc-200 flex items-center justify-center flex-shrink-0 transition-colors">
+                      <item.icon size={18} className="text-zinc-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium text-zinc-900">{item.title}</p>
+                      <p className="text-xs text-zinc-400 truncate">{item.description}</p>
+                    </div>
+                    <ChevronRight size={16} className="text-zinc-300 flex-shrink-0 group-hover:text-zinc-500 transition-colors" />
+                  </Link>
+                )
+              })}
             </div>
-            <h3 className="font-semibold text-zinc-900 mb-1">{card.title}</h3>
-            <p className="text-sm text-zinc-500">{card.description}</p>
-          </Link>
+          </div>
         ))}
       </div>
     </div>
