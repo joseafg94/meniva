@@ -455,95 +455,73 @@ export function BrandingForm({ initialData, categories, products }: BrandingForm
         <div className="bg-white border border-zinc-200 rounded-xl p-4 md:p-6">
           <h2 className="text-sm font-semibold text-zinc-900 mb-4">Vista previa del menú</h2>
           {/* Frame móvil neutro */}
-          <div className="relative mx-auto w-[280px] h-[560px] bg-zinc-800 rounded-[20px] p-[3px] shadow-2xl">
+          <div className="relative mx-auto w-[280px] h-[560px] bg-zinc-800 rounded-[24px] p-[3px] shadow-2xl">
             {/* Pantalla */}
-            <div className="w-full h-full rounded-[18px] overflow-hidden bg-white flex flex-col">
-              {/* Barra de estado simple */}
-              <div className="h-6 bg-zinc-900 flex items-center justify-between px-4 shrink-0">
-                <span className="text-white text-[9px]">9:41</span>
-                <div className="flex gap-1">
-                  <div className="w-3 h-1.5 bg-white rounded-sm opacity-80" />
-                  <div className="w-1 h-1.5 bg-white rounded-sm opacity-60" />
-                </div>
-              </div>
+            <div className="w-full h-full rounded-[21px] overflow-hidden bg-white flex flex-col">
               {/* Contenido del menú */}
               <div
-                className="flex-1 overflow-hidden text-left relative"
+                className="flex-1 overflow-y-auto overflow-x-hidden text-left relative scrollbar-none"
                 style={{ backgroundColor: secondaryColor.hex, fontFamily: fontOption.family }}
               >
-              {/* Cover */}
-              {coverPreview && (
-                <div className="h-20 w-full overflow-hidden relative">
-                  <Image src={coverPreview} alt="Portada" fill className="object-cover" sizes="100%" />
-                </div>
-              )}
-              {/* Header */}
-              <div className="bg-white border-b border-zinc-100 px-3 py-3 flex items-center gap-2">
-                {logoPreview ? (
-                  <Image src={logoPreview} alt="Logo" width={36} height={36} className="w-9 h-9 rounded-lg object-cover border border-zinc-100 shrink-0" />
-                ) : (
-                  <div className="w-9 h-9 rounded-lg bg-zinc-100 shrink-0" />
+                {/* Cover */}
+                {coverPreview && (
+                  <div className="h-20 w-full overflow-hidden relative">
+                    <Image src={coverPreview} alt="Portada" fill className="object-cover" sizes="100%" />
+                  </div>
                 )}
-                <div>
-                  <p className="text-xs font-bold text-zinc-900">{initialData.name}</p>
-                  <p className="text-[10px] text-zinc-400 line-clamp-1">{description || 'Descripción del restaurante'}</p>
+                {/* Header */}
+                <div className="bg-white border-b border-zinc-100 px-3 py-3 flex items-center gap-2">
+                  {logoPreview ? (
+                    <Image src={logoPreview} alt="Logo" width={36} height={36} className="w-9 h-9 rounded-lg object-cover border border-zinc-100 shrink-0" />
+                  ) : (
+                    <div className="w-9 h-9 rounded-lg bg-zinc-100 shrink-0" />
+                  )}
+                  <div>
+                    <p className="text-xs font-bold text-zinc-900">{initialData.name}</p>
+                    <p className="text-[10px] text-zinc-400 line-clamp-1">{description || 'Descripción del restaurante'}</p>
+                  </div>
                 </div>
-              </div>
-              {/* Category tabs */}
-              <div className="bg-white border-b border-zinc-100 px-3 py-2 flex gap-1.5 overflow-x-auto scrollbar-none">
-                {(categories.length > 0 ? categories.slice(0, 4) : [{ id: 'a', name: 'Entradas' }, { id: 'b', name: 'Principales' }]).map((cat) => {
-                  const isActive = (selectedCatId ?? categories[0]?.id) === cat.id
-                  return (
-                    <button
-                      key={cat.id}
-                      type="button"
-                      onClick={() => setSelectedCatId(cat.id)}
-                      className="px-2.5 py-1 rounded-full text-[10px] font-medium whitespace-nowrap transition-colors"
-                      style={isActive ? { backgroundColor: primaryColor.hex, color: '#ffffff' } : { color: '#71717a' }}
-                    >
-                      {cat.name}
-                    </button>
-                  )
-                })}
-              </div>
-              {/* Products */}
-              <div className="p-3 space-y-2 overflow-hidden">
-                {(() => {
-                  const PLACEHOLDERS = [
-                    { id: 'ph1', name: 'Café Americano', price: 2.50, image_url: null },
-                    { id: 'ph2', name: 'Croissant', price: 3.00, image_url: null },
-                    { id: 'ph3', name: 'Jugo Natural', price: 2.75, image_url: null },
-                    { id: 'ph4', name: 'Tostadas con Mantequilla', price: 1.50, image_url: null },
-                  ]
-                  const activeCatId = selectedCatId ?? categories[0]?.id
-                  const catProducts = activeCatId
-                    ? products.filter(p => p.category_id === activeCatId)
-                    : products
-                  const otherProducts = activeCatId
-                    ? products.filter(p => p.category_id !== activeCatId)
-                    : []
-                  
-                  const allReal = [...catProducts, ...otherProducts].slice(0, 4)
-                  const needed = 4 - allReal.length
-                  const displayProducts = [
-                    ...allReal,
-                    ...PLACEHOLDERS.slice(0, needed),
-                  ]
-                  return displayProducts.map((p) => (
-                    <div key={p.id} className="flex gap-2 bg-white rounded-lg border border-zinc-100 overflow-hidden shadow-sm">
-                      {'image_url' in p && p.image_url ? (
-                        <Image src={p.image_url} alt={p.name} width={48} height={48} className="w-12 h-12 object-cover shrink-0" />
-                      ) : (
-                        <div className="w-12 h-12 bg-zinc-100 shrink-0" />
-                      )}
-                      <div className="flex-1 py-1.5 pr-2 flex flex-col justify-between min-w-0">
-                        <p className="text-[10px] font-semibold text-zinc-900 leading-tight line-clamp-2">{p.name}</p>
-                        <p className="text-[10px] font-bold" style={{ color: primaryColor.hex }}>${Number(p.price).toFixed(2)}</p>
+                {/* Category tabs */}
+                <div className="bg-white border-b border-zinc-100 px-3 py-2 flex gap-1.5 overflow-x-auto scrollbar-none">
+                  {(categories.length > 0 ? categories : [{ id: 'a', name: 'Entradas' }, { id: 'b', name: 'Principales' }]).map((cat) => {
+                    const isActive = (selectedCatId ?? categories[0]?.id) === cat.id
+                    return (
+                      <button
+                        key={cat.id}
+                        type="button"
+                        onClick={() => setSelectedCatId(cat.id)}
+                        className="px-2.5 py-1 rounded-full text-[10px] font-medium whitespace-nowrap transition-colors"
+                        style={isActive ? { backgroundColor: primaryColor.hex, color: '#ffffff' } : { color: '#71717a' }}
+                      >
+                        {cat.name}
+                      </button>
+                    )
+                  })}
+                </div>
+                {/* Products */}
+                <div className="p-3 space-y-2">
+                  {(() => {
+                    const activeCatId = selectedCatId ?? categories[0]?.id
+                    const catProducts = activeCatId
+                      ? products.filter(p => p.category_id === activeCatId)
+                      : products
+                    const displayProducts = catProducts.slice(0, 5)
+
+                    return displayProducts.map((p) => (
+                      <div key={p.id} className="flex gap-2 bg-white rounded-lg border border-zinc-100 overflow-hidden shadow-sm">
+                        {p.image_url ? (
+                          <Image src={p.image_url} alt={p.name} width={48} height={48} className="w-12 h-12 object-cover shrink-0" />
+                        ) : (
+                          <div className="w-12 h-12 bg-zinc-100 shrink-0" />
+                        )}
+                        <div className="flex-1 py-1.5 pr-2 flex flex-col justify-between min-w-0">
+                          <p className="text-[10px] font-semibold text-zinc-900 leading-tight line-clamp-2">{p.name}</p>
+                          <p className="text-[10px] font-bold" style={{ color: primaryColor.hex }}>${Number(p.price).toFixed(2)}</p>
+                        </div>
                       </div>
-                    </div>
-                  ))
-                })()}
-              </div>
+                    ))
+                  })()}
+                </div>
               </div>
             </div>
           </div>

@@ -31,7 +31,7 @@ export default async function BrandingPage() {
       .select('id, name, price, image_url, category_id')
       .eq('restaurant_id', restaurant.id)
       .order('position')
-      .limit(20),
+      .limit(100),
   ])
 
   return (
