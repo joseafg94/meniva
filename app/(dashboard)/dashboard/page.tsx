@@ -29,7 +29,7 @@ const groups = [
   {
     label: 'Cobro y Promoción',
     items: [
-      { title: 'Yappy', description: 'Recibe pagos con tu QR', href: '/dashboard/yappy', icon: Wallet, iconBg: 'bg-violet-50', iconColor: 'text-violet-600' },
+      
       { title: 'WhatsApp', description: 'Botón de contacto directo', href: '/dashboard/whatsapp', icon: MessageCircle, iconBg: 'bg-green-50', iconColor: 'text-green-600' },
       { title: 'Mi QR', description: 'Descarga y comparte tu código QR', href: '/dashboard/qr', icon: QrCode, iconBg: 'bg-indigo-50', iconColor: 'text-indigo-600' },
     ],
