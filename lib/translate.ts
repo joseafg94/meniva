@@ -1,5 +1,5 @@
 export const uiTranslations = {
-  soldOut: "Agotado",
+  soldOut: "Sold out",
   popular: "Popular",
   new: "Nuevo",
   recommended: "Recomendado",
