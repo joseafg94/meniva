@@ -197,7 +197,7 @@ export function MenuClient({ restaurant, categories, products, isBannerVisible }
               {restaurant.is_open === true && (
                 <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
-                  Open
+                  Abierto
                 </span>
               )}
               {restaurant.is_open === false && (
@@ -273,17 +273,17 @@ export function MenuClient({ restaurant, categories, products, isBannerVisible }
             {!vipSubmitted ? (
               <form onSubmit={handleVipSubmit} className="space-y-4">
                 <div className="text-center space-y-1 mb-2">
-                  <h3 className="text-base font-bold text-zinc-900">Want exclusive offers? / Do you want exclusive offers?</h3>
-                  <p className="text-xs text-zinc-500">Join the {restaurant.name} VIP Club</p>
+                  <h3 className="text-base font-bold text-zinc-900">¿Quieres ofertas exclusivas?</h3>
+                  <p className="text-xs text-zinc-500">Únete al Club VIP de {restaurant.name}</p>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-zinc-700 mb-1">Name (optional)</label>
+                  <label className="block text-xs font-medium text-zinc-700 mb-1">Nombre (opcional)</label>
                   <input
                     type="text"
                     value={vipName}
                     onChange={(e) => setVipName(e.target.value)}
-                    placeholder="Your Name"
+                    placeholder="Tu nombre"
                     className="w-full text-sm bg-white border border-zinc-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
                   />
                 </div>
@@ -314,7 +314,7 @@ export function MenuClient({ restaurant, categories, products, isBannerVisible }
                 </div>
 
                 <p className="text-[11px] text-zinc-400 leading-tight">
-                  By registering, you agree to receive promotions from {restaurant.name} via WhatsApp. You can unsubscribe anytime.
+                  Al registrarte aceptas recibir promociones de {restaurant.name} por WhatsApp. Puedes darte de baja cuando quieras.
                 </p>
 
                 {vipError && <p className="text-xs text-rose-500">{vipError}</p>}
@@ -324,7 +324,7 @@ export function MenuClient({ restaurant, categories, products, isBannerVisible }
                   disabled={vipSubmitting}
                   className="w-full bg-zinc-900 hover:bg-zinc-800 text-white font-medium text-sm py-2.5 rounded-xl transition-all disabled:opacity-50"
                 >
-                  {vipSubmitting ? 'Registrando...' : 'Join the VIP Club'}
+                  {vipSubmitting ? 'Registrando...' : 'Unirme al Club VIP'}
                 </button>
               </form>
             ) : (
@@ -342,7 +342,7 @@ export function MenuClient({ restaurant, categories, products, isBannerVisible }
         <div className="max-w-2xl mx-auto px-4 py-8 text-center border-t border-zinc-100 mt-8 mb-4">
           {!submittedFeedback ? (
             <div className="space-y-3">
-              <h3 className="text-sm font-semibold text-zinc-800">How was your experience today?</h3>
+              <h3 className="text-sm font-semibold text-zinc-800">¿Qué tal tu experiencia hoy?</h3>
               <div className="flex justify-center gap-1.5">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
