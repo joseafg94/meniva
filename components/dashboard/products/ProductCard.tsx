@@ -148,8 +148,8 @@ export function ProductCard({ product }: { product: Product }) {
                 className="text-[10px] bg-zinc-50 border-zinc-200 rounded px-1 py-0.5 outline-none focus:border-emerald-500"
               >
                 <option value="Popular">Popular</option>
-                <option value="Nuevo">Nuevo</option>
-                <option value="Recomendado">Recomendado</option>
+                <option value="Nuevo">Just Added</option>
+                <option value="Recomendado">Featured</option>
               </select>
             )}
           </div>
