@@ -283,7 +283,7 @@ export function MenuClient({ restaurant, categories, products, isBannerVisible }
                     type="text"
                     value={vipName}
                     onChange={(e) => setVipName(e.target.value)}
-                    placeholder="TYour Name"
+                    placeholder="Your Name"
                     className="w-full text-sm bg-white border border-zinc-200 rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-all"
                   />
                 </div>
