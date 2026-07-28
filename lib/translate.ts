@@ -1,8 +1,8 @@
 export const uiTranslations = {
   soldOut: "Agotado",
   popular: "Popular",
-  new: "Nuevo",
-  recommended: "Recomendado",
+  new: "Just Added",
+  recommended: "Featured",
   others: "Otros",
   emptyMenu: "El menú aún no tiene productos disponibles.",
   createdWith: "Menú digital creado con",
